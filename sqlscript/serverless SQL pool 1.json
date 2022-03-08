@@ -1,0 +1,17 @@
+{
+	"name": "serverless SQL pool 1",
+	"properties": {
+		"content": {
+			"query": "SELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://lizzycontosolake.dfs.core.windows.net/lizzyusers/NYCTripSmall.parquet',\n        FORMAT='PARQUET'\n    ) AS [result]\n\nCREATE DATABASE DataExplorationDB \n                COLLATE Latin1_General_100_BIN2_UTF8",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

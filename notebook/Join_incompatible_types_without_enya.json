@@ -1,0 +1,178 @@
+{
+	"name": "Join_incompatible_types_without_enya",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "70cb1608-0229-4c16-bde7-f5748b64c058"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1"
+			},
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "python"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Join two datasets on the incompatible JobID column without Enya."
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"import pandas as pd\n",
+					"import numpy as np\n",
+					"import re\n",
+					"import datetime as dt\n",
+					"from enya.kb.config import ConfigurationSetup"
+				],
+				"attachments": null,
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Read cluster data\n",
+					"df1 = pd.read_csv(\"data/job_level_data_with_cluster_ids_sample.csv\", sep=',')\n",
+					"df1.sample(10)"
+				],
+				"attachments": null,
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"df1['JobId'].sample(10)"
+				],
+				"attachments": null,
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Read job data\n",
+					"df2 = pd.read_csv(\"data/job_level_data_sample.csv\", sep=',')\n",
+					"df2.sample(10)\n",
+					""
+				],
+				"attachments": null,
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"df2['JobId'].sample(10)"
+				],
+				"attachments": null,
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# doing this will fail\n",
+					"# join_df = pd.merge(df1, df2, left_on='JobId', right_on='JobNo')\n",
+					""
+				],
+				"attachments": null,
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Clean a column by removing rows that do not conform to the expected type\n",
+					"def clean(df, on_field, field_type):\n",
+					"    if df[on_field].dtypes != field_type:\n",
+					"        print('Cleaning dataframe with size: {0}'.format(len(df)))\n",
+					"        if field_type == np.int64 or field_type == 'int':\n",
+					"            df = df[pd.to_numeric(df[on_field], errors='coerce').notnull()].copy()\n",
+					"            df[on_field] = df[on_field].astype(int)\n",
+					"        elif field_type == 'float':\n",
+					"            df = df[pd.to_numeric(df[on_field], errors='coerce').notnull()].copy()\n",
+					"            df[on_field] = df[on_field].astype(float)\n",
+					"        elif field_type == np.object:\n",
+					"            df = df[pd.to_numeric(df[on_field], errors='coerce').isnull()].copy()\n",
+					"            df[on_field] = df[on_field].astype(str)\n",
+					"    return df"
+				],
+				"attachments": null,
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Clean the join column before performing the join operation\n",
+					"def join_dfs(df1, df2, df1_field, df2_field, field_type=np.int64, how='inner'):\n",
+					"    print('Field types: ', field_type)\n",
+					"    if df1[df1_field].dtypes != df2[df2_field].dtypes:\n",
+					"        print('Cleaning required as the type differs')\n",
+					"        print('DataFrame 1 has type: {0} \\nDataFrame 2 has type: {1}'.format(df1[df1_field].dtypes,\n",
+					"                                                                               df2[df2_field].dtypes))\n",
+					"        df1 = clean(df1, df1_field, field_type)\n",
+					"        df2 = clean(df2, df2_field, field_type)\n",
+					"    join_df = pd.merge(df1, df2, left_on=df1_field, right_on=df2_field, how=how)\n",
+					"    print('Joined dataframe size: {0}'.format(len(join_df)))\n",
+					"    return join_df"
+				],
+				"attachments": null,
+				"execution_count": 8
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"tags": []
+				},
+				"source": [
+					"join_result = join_dfs(df1, df2, 'JobId', 'JobId')"
+				],
+				"attachments": null,
+				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"join_result.sample(5)"
+				],
+				"attachments": null,
+				"execution_count": 10
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"join_result['JobId'].dtype"
+				],
+				"attachments": null,
+				"execution_count": 11
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"join_result['JobId'].dtype"
+				],
+				"attachments": null,
+				"execution_count": 12
+			}
+		]
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"name": "serverless SQL pool 2",
+	"properties": {
+		"content": {
+			"query": "DROP EXTERNAL DATA SOURCE ContosoLake\n\nCREATE EXTERNAL DATA SOURCE ContosoLake\nWITH ( LOCATION = 'https://lizzycontosolake.dfs.core.windows.net')\n\nDROP LOGIN data_explorer\n\nCREATE LOGIN data_explorer WITH PASSWORD = 'My Very Strong Password 1234!';\n\nDrop USER data_explorer\n\nCREATE USER data_explorer FOR LOGIN data_explorer;\nGO\nGRANT ADMINISTER DATABASE BULK OPERATIONS TO data_explorer;\nGO\n\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n            BULK '/lizzyusers/NYCTripSmall.parquet',\n            DATA_SOURCE = 'ContosoLake',\n            FORMAT='PARQUET'\n    ) AS [result]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "DataExplorationDB",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

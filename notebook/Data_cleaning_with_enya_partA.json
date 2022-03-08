@@ -1,0 +1,191 @@
+{
+	"name": "Data_cleaning_with_enya_partA",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "a07c7572-15d3-4e4d-baf8-2e3db91ff190"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1"
+			},
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "python"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Showing how to register a cleaning function to a column so that other can reuse"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"import pandas as pd\n",
+					"import datetime as dt\n",
+					"import re\n",
+					"import enya as en\n",
+					"from enya.kb.kb import KB\n",
+					"from enya import SemanticDataFrame\n",
+					"from enya.model import Attribute, LogicalType\n",
+					"from enya.kb.config import ConfigurationSetup \n",
+					"import logging\n",
+					"logging.getLogger('cdm-python').setLevel(logging.ERROR)"
+				],
+				"attachments": null,
+				"execution_count": 10
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"tags": []
+				},
+				"source": [
+					"KB = en.KB()\n",
+					"KB.make_default()\n",
+					"\n",
+					"#Load cdm model\n",
+					"KB.load_from_manifest(\"local:/cdm/jobsModel.manifest.cdm.json\") \n",
+					"\n",
+					"#Retrieve entity and generate a semantic dataframe\n",
+					"sdf = KB.get_data(\"jobsEntity\") \n",
+					"sdf"
+				],
+				"attachments": null,
+				"execution_count": 11
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"sdf.dtypes"
+				],
+				"attachments": null,
+				"execution_count": 12
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Method for cleaning the timestamp column\n",
+					"def clean_timestamp(x):\n",
+					"    # Since the date in the dataset is missing in most rows, assuming below is the date that is missing based on given dataset\n",
+					"    MISSING_DATE = '4/17/2020'\n",
+					"\n",
+					"    def clean_time(time_str, flag):\n",
+					"        # first stripping any unwanted spaces, then splitting first on the . and then on the colons\n",
+					"        time_str = time_str.strip().split('.')[0].split(':')\n",
+					"        clean_time_str = ''\n",
+					"        if not flag:\n",
+					"            if len(time_str) == 2:\n",
+					"                time_str.append('00')\n",
+					"            clean_time_str = ':'.join(str(t) for t in time_str)\n",
+					"        else:\n",
+					"            if len(time_str) == 2:\n",
+					"                clean_time_str = '00:'\n",
+					"            clean_time_str += ':'.join(str(t) for t in time_str)\n",
+					"        return clean_time_str\n",
+					"\n",
+					"    # clean extra white spaces\n",
+					"    x = re.sub(' +', ' ', x)\n",
+					"    # now splitting the date and time \n",
+					"    x = x.split(' ')\n",
+					"    flag = True\n",
+					"    if len(x) == 2:\n",
+					"        date_str = x[0]\n",
+					"        time_str = x[1]\n",
+					"        flag = False\n",
+					"    elif len(x) == 1:\n",
+					"        date_str = MISSING_DATE\n",
+					"        time_str = x[0]\n",
+					"    else:\n",
+					"        raise Exception('Something wrong with the input')\n",
+					"\n",
+					"    cleaned_time = clean_time(time_str, flag)\n",
+					"    date_time_str = '{0} {1}'.format(date_str, cleaned_time)\n",
+					"    date_time_obj = dt.datetime.strptime(date_time_str, '%m/%d/%Y %H:%M:%S')\n",
+					"    return date_time_obj\n",
+					""
+				],
+				"attachments": null,
+				"execution_count": 13
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"tags": []
+				},
+				"source": [
+					"# Register cleaning function to the attribute associated with the column\n",
+					"#timestamp_attribute = entity.get_attribute(\"PreciseTimeStamp\")\n",
+					"KB.register_standardizer(\"jobsEntity\",\"PreciseTimeStamp\", clean_timestamp)\n",
+					""
+				],
+				"attachments": null,
+				"execution_count": 14
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Apply the cleaning method to transform the column\n",
+					"sdf.standardize(\"PreciseTimeStamp\")\n",
+					""
+				],
+				"attachments": null,
+				"execution_count": 15
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Check type of transformed_PTS column\n",
+					"sdf.dtypes"
+				],
+				"attachments": null,
+				"execution_count": 16
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"sdf[\"PreciseTimeStamp\"].sample(5)"
+				],
+				"attachments": null,
+				"execution_count": 17
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"KB.persist(\"data/kb_partA/enya_kb.pkl\")"
+				],
+				"attachments": null,
+				"execution_count": 18
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					""
+				],
+				"attachments": null,
+				"execution_count": null
+			}
+		]
+	}
+}

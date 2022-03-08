@@ -1,0 +1,395 @@
+{
+	"name": "Automatic_field_extraction_with_enya",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "enyatest3",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "505b56b2-f72b-4509-b9ea-4219b739fa95"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1"
+			},
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/enyatest3",
+				"name": "enyatest3",
+				"type": "Spark",
+				"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/enyatest3",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56,
+				"extraHeader": null
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Automatically access fields within a column based on its logical type\n",
+					""
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"tags": []
+				},
+				"source": [
+					"import pandas as pd\n",
+					"import sys\n",
+					"import os\n",
+					"import re\n",
+					"import datetime as dt\n",
+					"import enya as en\n",
+					"import logging\n",
+					"logging.getLogger('cdm-python').setLevel(logging.ERROR)\n",
+					""
+				],
+				"attachments": null,
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"tags": []
+				},
+				"source": [
+					"# Load CDM model\n",
+					"KB = en.KB()\n",
+					"KB.make_default()"
+				],
+				"attachments": null,
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"KB"
+				],
+				"attachments": null,
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# cdm_blob_sas = \"https://lizzycontosolake.dfs.core.windows.net/lizzyusers/data/enya_kb/\"\r\n",
+					"# enya_kb_blob_sas = \"https://lizzycontosolake.dfs.core.windows.net/lizzyusers/data/enya_kb/\""
+				],
+				"attachments": null,
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Register and save parsers first time\n",
+					"KB.load_from_manifest(\"./cdm/jobsModel.manifest.cdm.json\")\n",
+					"sdf = KB.get_data(\"jobsInfo\")\n",
+					"\n",
+					"message_type = sdf.get_attribute(\"Message\").get_logical_type()\n",
+					"workspace_type = sdf.get_attribute(\"WorkspaceName\").get_logical_type()\n",
+					"poolname_type = sdf.get_attribute(\"PoolName\").get_logical_type()\n",
+					"\n",
+					"message_type.add_component(\n",
+					"    \"workspace\", workspace_type, str, lambda x: x.split(\".\")[2]\n",
+					"    )\n",
+					"message_type.add_component(\n",
+					"    \"poolname\", poolname_type, str, lambda x: x.split(\".\")[3]\n",
+					"    )\n",
+					"KB.persist(\"./data/enya_kb\")\n",
+					"KB.clean()"
+				],
+				"attachments": null,
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Load CDM model\r\n",
+					"KB = en.KB()\r\n",
+					"KB.make_default()"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"KB.load_from_manifest('https://lizzyhierarchicaltest.blob.core.windows.net/enyatest/cdm/jobsModel.manifest.cdm.json')"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"KB.load_from_manifest('abfss://lizzyusers@lizzycontosolake.dfs.core.windows.net/cdm/jobsModel.manifest.cdm.json', path_to_kb='abfss://lizzyusers@lizzycontosolake.dfs.core.windows.net/data/enya_kb/')"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"KB.get_entities()"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Generate semantic dataframe for job entity\n",
+					"sdf = KB.get_data(\"jobsInfo\")"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"sdf.standardize()"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"tags": []
+				},
+				"source": [
+					"sdf.sample(5)"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Message column is a string containing multiple information (workspace, poolname, etc)\n",
+					"sdf[\"Message\"].sample(5)\n",
+					""
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Group by workspace field\n",
+					"sdf.groupby(\"Message.workspace\").count()\n",
+					""
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"#Group by on poolname field\n",
+					"sdf.groupby(\"Message.poolname\").count()\n",
+					""
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"# Without Enya"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "python"
+					}
+				},
+				"source": [
+					"%%pyspark\r\n",
+					"data_path = spark.read.load('abfss://lizzyusers@lizzycontosolake.dfs.core.windows.net/data/job_level_data_sample.csv', format='csv')\r\n",
+					"display(df.limit(10))"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"\n",
+					"df = pd.read_csv(\"data/job_level_data_sample.csv\")\n",
+					"df[\"Message\"].sample(5)"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"def get_workspace(message):\n",
+					"    components = message.split(\".\")\n",
+					"    workspace = components[2]\n",
+					"    return workspace\n",
+					"\n",
+					"df[\"workspace\"] = df[\"Message\"].map(get_workspace)"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"df.groupby(\"workspace\").count()"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"def get_poolname(message):\n",
+					"    components = message.split(\".\")\n",
+					"    workspace = components[3]\n",
+					"    return workspace\n",
+					"\n",
+					"df[\"poolname\"] = df[\"Message\"].map(get_workspace)"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"df.groupby(\"poolname\").count()"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Registering components\n",
+					""
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from enya.model import LogicalType\n",
+					"\n",
+					"message_type = LogicalType(\"message_type_lt\", str)\n",
+					"\n",
+					"workspace_type = LogicalType(\"workspace_lt\", str)\n",
+					"poolname_type = LogicalType(\"poolname_lt\", str)\n",
+					"cluster_id_type = LogicalType(\"cluster_id_lt\", str)\n",
+					"\n",
+					"message_type.add_component(\n",
+					"    \"workspace\", workspace_type, str, lambda x: x.split(\".\")[2]\n",
+					")\n",
+					"message_type.add_component(\n",
+					"    \"poolname\", poolname_type, str, lambda x: x.split(\".\")[3]\n",
+					")\n",
+					"message_type.add_component(\n",
+					"    \"cluster_id\", cluster_id_type, str, lambda x: x.split(\".\")[4]\n",
+					")"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					""
+				],
+				"attachments": null,
+				"execution_count": null
+			}
+		]
+	}
+}

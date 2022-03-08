@@ -1,0 +1,234 @@
+{
+	"name": "Cleaning_timestamps_and_doing_joins_with_enya",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "569efa63-ead0-4704-8728-8d37df60e91c"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1"
+			},
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "python"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"import pandas as pd\n",
+					"from datetime import datetime\n",
+					"import math\n",
+					"import re\n",
+					"import numpy as np\n",
+					"\n",
+					"import enya as en\n",
+					"import logging\n",
+					"logging.getLogger('cdm-python').setLevel(logging.ERROR)"
+				],
+				"attachments": null,
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"data = pd.read_csv('data/enya_cluster_time_ex.csv')"
+				],
+				"attachments": null,
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"data.head()"
+				],
+				"attachments": null,
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"data.dtypes"
+				],
+				"attachments": null,
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"data['EventType']"
+				],
+				"attachments": null,
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Cannot use existing datetime functions to clean timestamp\n",
+					"## doing this fails\n",
+					"## datetime.strptime(data['PreciseTimeStamp'][0], '%Y-%m-%d %H:%M:%S.%f')"
+				],
+				"attachments": null,
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Require truncating existing data\n",
+					"datetime.strptime(data['PreciseTimeStamp'][0][:-1], '%Y-%m-%d %H:%M:%S.%f')"
+				],
+				"attachments": null,
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Or, we can devise a means to parse the timestamps ourselves without losing information\n",
+					"def custom_time_parser_with_nanoseconds(time_stamp): \n",
+					"\n",
+					"    # First, parse the year, month, day, hour, min, second\n",
+					"    cleaned_ts = datetime.strptime(time_stamp[:-8], '%Y-%m-%d %H:%M:%S')\n",
+					"    converted_ts = pd.Timestamp(\n",
+					"        year=cleaned_ts.year, \n",
+					"        month=cleaned_ts.month, \n",
+					"        day=cleaned_ts.day, \n",
+					"        hour=cleaned_ts.hour,\n",
+					"        minute=cleaned_ts.minute,\n",
+					"        second=cleaned_ts.second\n",
+					"    )\n",
+					"    # Now, parse the nanoseconds\n",
+					"    ts_nano = int(int(time_stamp[-7:])*(1e9)/(1e7))\n",
+					"    full_cleaned_ts = converted_ts + pd.Timedelta(nanoseconds=ts_nano)\n",
+					"    return full_cleaned_ts"
+				],
+				"attachments": null,
+				"execution_count": 8
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# How we would typically apply this standardization function\n",
+					"data['CleanedTS'] = data[['PreciseTimeStamp']].apply(lambda x: custom_time_parser_with_nanoseconds(*x), axis=1)"
+				],
+				"attachments": null,
+				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"data[['PreciseTimeStamp', 'CleanedTS']]"
+				],
+				"attachments": null,
+				"execution_count": 10
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"data.dtypes"
+				],
+				"attachments": null,
+				"execution_count": 11
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Now we register and save this non-trivial function for others via use of CDM!\n",
+					"KB = en.KB()\n",
+					"KB.make_default()\n",
+					"KB.load_from_manifest(\"local:/cdm/jobsModel.manifest.cdm.json\")"
+				],
+				"attachments": null,
+				"execution_count": 12
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Load our cluster events entity and generate Semantic DataFrame\n",
+					"sdf = KB.get_data(\"clusterEventsEntity\")"
+				],
+				"attachments": null,
+				"execution_count": 13
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"sdf.sample(5)"
+				],
+				"attachments": null,
+				"execution_count": 14
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"sdf.dtypes"
+				],
+				"attachments": null,
+				"execution_count": 15
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Register cleaning function to the attribute associated with the column\n",
+					"KB.register_standardizer(\"jobsEntity\", \"PreciseTimeStamp\", custom_time_parser_with_nanoseconds)\n",
+					"# Apply the cleaning method to transform the column\n",
+					"sdf.standardize(\"PreciseTimeStamp\")"
+				],
+				"attachments": null,
+				"execution_count": 16
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# add time tag\n",
+					"sdf.get_attribute(\"PreciseTimeStamp\").get_logical_type().add_tags(\"time\")"
+				],
+				"attachments": null,
+				"execution_count": 17
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"sdf.dtypes"
+				],
+				"attachments": null,
+				"execution_count": 18
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from enya.plotting import plot_time_series\n",
+					"asdf = plot_time_series(sdf, id_col='ClusterName', state_col='EventType', edge_threshold=0.1)"
+				],
+				"attachments": null,
+				"execution_count": 19
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					""
+				],
+				"attachments": null,
+				"execution_count": null
+			}
+		]
+	}
+}

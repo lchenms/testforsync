@@ -1,0 +1,209 @@
+{
+	"name": "Data_cleaning_without_enya",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "c436b815-40dc-42a4-afac-28567f893c8e"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1"
+			},
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "python"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Manually clean a timestamp column to perform analysis"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"import pandas as pd\n",
+					"import datetime as dt\n",
+					"import re\n",
+					"from enya.kb.config import ConfigurationSetup\n",
+					"import logging\n",
+					"logging.getLogger('cdm-python').setLevel(logging.ERROR)"
+				],
+				"attachments": null,
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"conf = ConfigurationSetup()\n",
+					"# Read the file\n",
+					"df = pd.read_csv(\"data/example_mixed_timestamps.csv\", sep=',')\n",
+					"df.sample(10)"
+				],
+				"attachments": null,
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"df['PreciseTimeStamp'].head(20)"
+				],
+				"attachments": null,
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# The type of 'PreciseTimeStamp' column is object and not datetime \n",
+					"df.dtypes"
+				],
+				"attachments": null,
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Clean the timestamp column to bring it to consistent form\n",
+					"\n",
+					"def clean_timestamp(x):\n",
+					"    # Since the date in the dataset is missing in most rows, assuming below is the date that is missing based on given dataset\n",
+					"    MISSING_DATE = '4/17/2020'\n",
+					"\n",
+					"    def clean_time(time_str, flag):\n",
+					"        # first stripping any unwanted spaces, then splitting first on the . and then on the colons\n",
+					"        time_str = time_str.strip().split('.')[0].split(':')\n",
+					"        clean_time_str = ''\n",
+					"        if not flag:\n",
+					"            if len(time_str) == 2:\n",
+					"                time_str.append('00')\n",
+					"            clean_time_str = ':'.join(str(t) for t in time_str)\n",
+					"        else:\n",
+					"            if len(time_str) == 2:\n",
+					"                clean_time_str = '00:'\n",
+					"            clean_time_str += ':'.join(str(t) for t in time_str)\n",
+					"        return clean_time_str\n",
+					"\n",
+					"    # clean extra white spaces\n",
+					"    x = re.sub(' +', ' ', x)\n",
+					"    # now splitting the date and time \n",
+					"    x = x.split(' ')\n",
+					"    flag = True\n",
+					"    if len(x) == 2:\n",
+					"        date_str = x[0]\n",
+					"        time_str = x[1]\n",
+					"        flag = False\n",
+					"    elif len(x) == 1:\n",
+					"        date_str = MISSING_DATE\n",
+					"        time_str = x[0]\n",
+					"    else:\n",
+					"        raise Exception('Something wrong with the input')\n",
+					"\n",
+					"    cleaned_time = clean_time(time_str, flag)\n",
+					"    date_time_str = '{0} {1}'.format(date_str, cleaned_time)\n",
+					"    date_time_obj = dt.datetime.strptime(date_time_str, '%m/%d/%Y %H:%M:%S')\n",
+					"    return date_time_obj"
+				],
+				"attachments": null,
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"tags": []
+				},
+				"source": [
+					"# Run a custom parser for the given dataset that will clean the time, \n",
+					"# transform into dateTimeStamp format \n",
+					"# and add a new column(transformed_PTS) in the dataframe \n",
+					"df['transformed_PTS'] = df['PreciseTimeStamp'].apply(clean_timestamp)\n",
+					""
+				],
+				"attachments": null,
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Check type of transformed_PTS column\n",
+					"df.dtypes"
+				],
+				"attachments": null,
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Transformed column with clean dateTimeStamps\n",
+					"df[['transformed_PTS']]"
+				],
+				"attachments": null,
+				"execution_count": 8
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Generic code for running queries\n",
+					"def run_query(df, query_condition, group_by_col, agg_required):\n",
+					"    d1 = df.query(query_condition)\n",
+					"    return d1.groupby(df[group_by_col].dt.hour).agg(agg_required)"
+				],
+				"attachments": null,
+				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"tags": []
+				},
+				"source": [
+					"# Counting scale-up\n",
+					"query_result = run_query(df, 'Operation == \"AutoScaleUp\"', 'transformed_PTS', ['count'])\n",
+					"query_result"
+				],
+				"attachments": null,
+				"execution_count": 10
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"tags": []
+				},
+				"source": [
+					"# Counting scale-down\n",
+					"query_result = run_query(df, 'Operation == \"AutoScaleDown\"', 'transformed_PTS', ['count'])\n",
+					"query_result"
+				],
+				"attachments": null,
+				"execution_count": 11
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					""
+				],
+				"attachments": null,
+				"execution_count": null
+			}
+		]
+	}
+}
