@@ -17,14 +17,11 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "505b56b2-f72b-4509-b9ea-4219b739fa95"
+				"spark.autotune.trackingId": "abe7f642-b92c-4c8a-b32c-9b3529b16d6d"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"synapse_widget": {
-				"version": "0.1"
-			},
 			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
@@ -46,7 +43,7 @@
 				"nodeCount": 10,
 				"cores": 8,
 				"memory": 56,
-				"extraHeader": null
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -56,8 +53,7 @@
 				"source": [
 					"## Automatically access fields within a column based on its logical type\n",
 					""
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -75,7 +71,6 @@
 					"logging.getLogger('cdm-python').setLevel(logging.ERROR)\n",
 					""
 				],
-				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -88,7 +83,6 @@
 					"KB = en.KB()\n",
 					"KB.make_default()"
 				],
-				"attachments": null,
 				"execution_count": 2
 			},
 			{
@@ -107,7 +101,6 @@
 				"source": [
 					"KB"
 				],
-				"attachments": null,
 				"execution_count": 3
 			},
 			{
@@ -127,7 +120,6 @@
 					"# cdm_blob_sas = \"https://lizzycontosolake.dfs.core.windows.net/lizzyusers/data/enya_kb/\"\r\n",
 					"# enya_kb_blob_sas = \"https://lizzycontosolake.dfs.core.windows.net/lizzyusers/data/enya_kb/\""
 				],
-				"attachments": null,
 				"execution_count": 4
 			},
 			{
@@ -150,8 +142,7 @@
 					"KB.persist(\"./data/enya_kb\")\n",
 					"KB.clean()"
 				],
-				"attachments": null,
-				"execution_count": 6
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -171,8 +162,7 @@
 					"KB = en.KB()\r\n",
 					"KB.make_default()"
 				],
-				"attachments": null,
-				"execution_count": null
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -190,15 +180,49 @@
 				"source": [
 					"KB.load_from_manifest('https://lizzyhierarchicaltest.blob.core.windows.net/enyatest/cdm/jobsModel.manifest.cdm.json')"
 				],
-				"attachments": null,
-				"execution_count": null
+				"execution_count": 8
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"KB.load_from_manifest('abfss://lizzyusers@lizzycontosolake.dfs.core.windows.net/cdm/jobsModel.manifest.cdm.json')"
+				],
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"KB.load_from_manifest('https://lizzycontosolake.dfs.core.windows.net/lizzyusers/cdm/jobsModel.manifest.cdm.json')"
+				],
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"KB.load_from_manifest('abfss://lizzyusers@lizzycontosolake.dfs.core.windows.net/cdm/jobsModel.manifest.cdm.json', path_to_kb='abfss://lizzyusers@lizzycontosolake.dfs.core.windows.net/data/enya_kb/')"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -206,7 +230,6 @@
 				"source": [
 					"KB.get_entities()"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -215,7 +238,6 @@
 					"# Generate semantic dataframe for job entity\n",
 					"sdf = KB.get_data(\"jobsInfo\")"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -223,7 +245,6 @@
 				"source": [
 					"sdf.standardize()"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -234,7 +255,6 @@
 				"source": [
 					"sdf.sample(5)"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -244,7 +264,6 @@
 					"sdf[\"Message\"].sample(5)\n",
 					""
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -254,7 +273,6 @@
 					"sdf.groupby(\"Message.workspace\").count()\n",
 					""
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -264,15 +282,13 @@
 					"sdf.groupby(\"Message.poolname\").count()\n",
 					""
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
 				"source": [
 					"# Without Enya"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -295,7 +311,6 @@
 					"data_path = spark.read.load('abfss://lizzyusers@lizzycontosolake.dfs.core.windows.net/data/job_level_data_sample.csv', format='csv')\r\n",
 					"display(df.limit(10))"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -305,7 +320,6 @@
 					"df = pd.read_csv(\"data/job_level_data_sample.csv\")\n",
 					"df[\"Message\"].sample(5)"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -318,7 +332,6 @@
 					"\n",
 					"df[\"workspace\"] = df[\"Message\"].map(get_workspace)"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -326,7 +339,6 @@
 				"source": [
 					"df.groupby(\"workspace\").count()"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -339,7 +351,6 @@
 					"\n",
 					"df[\"poolname\"] = df[\"Message\"].map(get_workspace)"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -347,7 +358,6 @@
 				"source": [
 					"df.groupby(\"poolname\").count()"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -355,8 +365,7 @@
 				"source": [
 					"## Registering components\n",
 					""
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -379,7 +388,6 @@
 					"    \"cluster_id\", cluster_id_type, str, lambda x: x.split(\".\")[4]\n",
 					")"
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -387,7 +395,6 @@
 				"source": [
 					""
 				],
-				"attachments": null,
 				"execution_count": null
 			}
 		]
