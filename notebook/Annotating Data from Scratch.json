@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "d5217d95-6ca0-462b-aeea-ef02415f2bdb"
+				"spark.autotune.trackingId": "486a69cf-50bd-45aa-8dcc-bbc4045c6eae"
 			}
 		},
 		"metadata": {
@@ -56,6 +56,19 @@
 				"execution_count": 1
 			},
 			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"**Creating SemanticDataFrames**"
+				]
+			},
+			{
 				"cell_type": "code",
 				"metadata": {
 					"jupyter": {
@@ -71,7 +84,415 @@
 				"source": [
 					"df = pd.read_csv('abfss://lizzyusers@lizzycontosolake.dfs.core.windows.net/tests/resources/simple-cdm-model/order1.csv')"
 				],
-				"execution_count": 3
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"import enya\r\n",
+					"sdf = enya.SemanticDataFrame(df, {})"
+				],
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sdf"
+				],
+				"execution_count": 8
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"print(sdf.attributes)"
+				],
+				"execution_count": 9
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"**Creating Attributes and LogicalTypes**"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from enya.model import LogicalType, Attribute\r\n",
+					"address_lt = LogicalType(\"Address\", repr_type=str)\r\n",
+					"integer_id_lt = LogicalType(\"IntegerId\", repr_type=int, tags=[\"id\"])"
+				],
+				"execution_count": 10
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"shipment_to_address = Attribute(\"ShipmentToAddressAt\", address_lt)\r\n",
+					"order_id = Attribute(\"OrderIdAt\", integer_id_lt)\r\n",
+					"product_id = Attribute(\"ProductIdAt\", integer_id_lt)"
+				],
+				"execution_count": 11
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sdf.set_attribute(\"ShipmentToAddress\", shipment_to_address)\r\n",
+					"sdf.set_attribute(\"OrderId\", order_id)\r\n",
+					"sdf.set_attribute(\"ProductId\", product_id)\r\n",
+					"print(sdf.attributes)"
+				],
+				"execution_count": 12
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sdf1 = enya.SemanticDataFrame(df, attribute_to_column_mapping={shipment_to_address: \"ShipmentToAddress\", order_id: \"OrderId\", product_id: \"ProductId\"})"
+				],
+				"execution_count": 15
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sdf1"
+				],
+				"execution_count": 16
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"address_but_categorical =  LogicalType(\"AddressCat\", repr_type=str, tags=['categorical'])\r\n",
+					"shipment_to_address_cat = Attribute(\"ShipmentToAddressCatAt\", address_lt)\r\n",
+					"sdf.set_attribute(\"ShipmentToAddress\", shipment_to_address_cat)"
+				],
+				"execution_count": 17
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"**Creating Entities & Relationships**"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from enya.model import Entity\r\n",
+					"from enya.model.grounding import GroundingFunc\r\n",
+					"kb = enya.KB()\r\n",
+					"kb.make_default()"
+				],
+				"execution_count": 36
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"orders = Entity(\"Orders\", attributes=[shipment_to_address, order_id, product_id])\r\n",
+					"kb.add_grounding(GroundingFunc(lambda: df, attribute_to_column_mapping={shipment_to_address: \"ShipmentToAddress\", order_id: \"OrderId\", product_id: \"ProductId\"}), orders)"
+				],
+				"execution_count": 37
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sdf = kb.get_data(\"Orders\")"
+				],
+				"execution_count": 38
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sdf"
+				],
+				"execution_count": 39
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sdf.set_attribute(\"ShipmentToAddress\", shipment_to_address)\r\n",
+					"sdf.set_attribute(\"OrderId\", order_id)\r\n",
+					"sdf.set_attribute(\"ProductId\", product_id)\r\n",
+					"print(sdf.attributes)"
+				],
+				"execution_count": 48
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from enya.utils.grounding_utils import get_grounding_from_file\r\n",
+					"grounding = get_grounding_from_file(\r\n",
+					"    \"abfss://lizzyusers@lizzycontosolake.dfs.core.windows.net/tests/resources/simple-cdm-model/order1.csv\",\r\n",
+					"    attribute_to_column_mapping={shipment_to_address: \"ShipmentToAddress\", order_id: \"OrderId\", product_id: \"ProductId\"})\r\n",
+					"orders = Entity(\"Orders_from_file\", attributes=[shipment_to_address, order_id, product_id])\r\n",
+					"kb.add_grounding(grounding, orders)"
+				],
+				"execution_count": 40
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sdf1 = kb.get_data(\"Orders_from_file\")"
+				],
+				"execution_count": 41
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sdf1"
+				],
+				"execution_count": 42
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from enya.model import Relationship"
+				],
+				"execution_count": 44
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"order_relation = Relationship(from_entity=\"Orders\", from_attribute=\"ProductIdAt\", to_entity=\"Item\", to_attribute = \"ProductIdAt\")"
+				],
+				"execution_count": 49
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"kb.show_relationships()"
+				],
+				"execution_count": 47
 			}
 		]
 	}
