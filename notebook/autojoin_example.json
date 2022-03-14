@@ -1,0 +1,288 @@
+{
+	"name": "autojoin_example",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "enyatest3",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "331e0d43-07c0-42a8-8109-e83a4a3e4ad7"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/enyatest3",
+				"name": "enyatest3",
+				"type": "Spark",
+				"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/enyatest3",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"source": [
+					"# Autojoin Documentation Notebook\n",
+					"This is accompanying ``docs/source/autojoin.rst`` to create the plots therein. Please see that source for an explanation of the workflow."
+				]
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Inferring Merge Paths\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from enya import KB\n",
+					"kb = KB()\n",
+					"\n",
+					"from enya.backend import set_backend, get_backend\n",
+					"set_backend('koalas')\n",
+					"print(get_backend())\n",
+					"\n",
+					"kb.make_default()\n",
+					"from enya.model import  Entity, Relationship, Attribute"
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"kb.clean()\n",
+					"Entity(\"Customer\", attributes=[Attribute(\"CustomerId\", int), Attribute(\"CustomerName\", str), Attribute(\"CustomerAddressId\", int)])\n",
+					"Entity(\"Sale\", attributes=[Attribute(\"CustomerId\", int), Attribute(\"ProductId\", int), Attribute(\"StoreId\", int)])\n",
+					"Entity(\"Product\", attributes=[Attribute(\"ProductId\", int), Attribute(\"Price\", float)])\n",
+					"Entity(\"CustomerAddress\", attributes=[Attribute(\"CustomerAddressId\", int), Attribute(\"StreetAddress\", float), Attribute(\"ZipCode\", int)])\n",
+					"Entity(\"Store\", attributes=[Attribute(\"StoreId\", int), Attribute(\"StoreAddress\", str)])\n",
+					"Relationship(from_entity=\"Sale\", from_attribute=\"ProductId\", to_entity=\"Product\", to_attribute=\"ProductId\")\n",
+					"Relationship(from_entity=\"Sale\", from_attribute=\"StoreId\", to_entity=\"Store\", to_attribute=\"StoreId\")\n",
+					"Relationship(from_entity=\"Sale\", from_attribute=\"CustomerId\", to_entity=\"Customer\", to_attribute=\"CustomerId\")\n",
+					"Relationship(from_entity=\"Customer\", from_attribute=\"CustomerAddressId\", to_entity=\"CustomerAddress\", to_attribute=\"CustomerAddressId\")"
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"star_graph = kb.show_relationships()\n",
+					"star_graph"
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"star_graph.render(\"star\", format=\"png\")"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"merge_path = kb.find_merge_paths([\"Sale\", \"CustomerAddress\"])"
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"merge_path_graph = kb.show_relationships(highlight_paths=merge_path)\n",
+					"merge_path_graph"
+				],
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"merge_path_graph.render(\"merge_path_star\", format=\"png\")"
+				],
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"kb = KB()\n",
+					"kb.make_default()\n",
+					"kb.clean()\n",
+					"Entity(\"Customer\", attributes=[Attribute(\"CustomerId\", int), Attribute(\"CustomerName\", str), Attribute(\"CustomerAddressId\", int)])\n",
+					"Entity(\"Sale\", attributes=[Attribute(\"CustomerId\", int), Attribute(\"ProductId\", int), Attribute(\"StoreId\", int)])\n",
+					"Entity(\"Product\", attributes=[Attribute(\"ProductId\", int), Attribute(\"Price\", float)])\n",
+					"Entity(\"CustomerAddress\", attributes=[Attribute(\"CustomerAddressId\", int), Attribute(\"StreetAddress\", float), Attribute(\"ZipCode\", int)])\n",
+					"Entity(\"Store\", attributes=[Attribute(\"StoreId\", int), Attribute(\"StoreAddress\", str), Attribute(\"RegionId\", int)])\n",
+					"Entity(\"Region\", attributes=[Attribute(\"RegionId\", int)])\n",
+					"Entity(\"ProductAvailableInRegion\", attributes=[Attribute(\"ProductId\", int), Attribute(\"RegionId\", int)])\n",
+					"Relationship(from_entity=\"Sale\", from_attribute=\"ProductId\", to_entity=\"Product\", to_attribute=\"ProductId\")\n",
+					"Relationship(from_entity=\"Sale\", from_attribute=\"StoreId\", to_entity=\"Store\", to_attribute=\"StoreId\")\n",
+					"Relationship(from_entity=\"Sale\", from_attribute=\"CustomerId\", to_entity=\"Customer\", to_attribute=\"CustomerId\")\n",
+					"Relationship(from_entity=\"Customer\", from_attribute=\"CustomerAddressId\", to_entity=\"CustomerAddress\", to_attribute=\"CustomerAddressId\")\n",
+					"Relationship(from_entity=\"Store\", from_attribute=\"RegionId\", to_entity=\"Region\", to_attribute=\"RegionId\")\n",
+					"Relationship(from_entity=\"ProductAvailableInRegion\", from_attribute=\"RegionId\", to_entity=\"Region\", to_attribute=\"RegionId\")\n",
+					"Relationship(from_entity=\"ProductAvailableInRegion\", from_attribute=\"ProductId\", to_entity=\"Product\", to_attribute=\"ProductId\")"
+				],
+				"execution_count": 8
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"region_graph = kb.show_relationships()\n",
+					"region_graph.render(\"region_graph\", format=\"png\")\n",
+					"region_graph"
+				],
+				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"two_paths = kb.find_merge_paths([\"Store\", \"Product\"])"
+				],
+				"execution_count": 10
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"two_paths_graph = kb.show_relationships(highlight_paths=two_paths)\n",
+					"two_paths_graph.render(\"two_paths_graph\", format=\"png\")\n",
+					"two_paths_graph"
+				],
+				"execution_count": 11
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"kb.find_merge_paths([\"Store\", \"Product\"], shortest_path=True)"
+				],
+				"execution_count": 12
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Merging multiple entities"
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"merge_paths = kb.find_merge_paths([\"Sale\", \"CustomerAddress\", \"Store\"])\n",
+					""
+				],
+				"execution_count": 13
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"multiple_entity_paths_graph = kb.show_relationships(highlight_paths=merge_paths)\n",
+					"multiple_entity_paths_graph.render(\"multiple_entities_graph\", format=\"png\")\n",
+					"multiple_entity_paths_graph"
+				],
+				"execution_count": 14
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"kb.find_merge_paths([\"Sale\", \"CustomerAddress\", \"Store\"])"
+				],
+				"execution_count": 15
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"kb.find_merge_paths([\"Sale\", \"CustomerAddress\", \"Store\"], shortest_path=True)"
+				],
+				"execution_count": 16
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"kb = KB()\n",
+					"kb.make_default()\n",
+					"Entity(\"Customer\", attributes=[Attribute(\"CustomerId\", int), Attribute(\"CustomerName\", str), Attribute(\"CustomerAddressId\", int)])\n",
+					"Entity(\"Order\", attributes=[Attribute(\"CustomerId\", int), Attribute(\"ProductId\", int)])\n",
+					"Entity(\"Shipment\", attributes=[Attribute(\"CustomerId\", int), Attribute(\"ProductId\", int)])\n",
+					"Entity(\"Product\", attributes=[Attribute(\"ProductId\", int), Attribute(\"Price\", float)])\n",
+					"Relationship(from_entity=\"Order\", from_attribute=\"ProductId\", to_entity=\"Product\", to_attribute=\"ProductId\")\n",
+					"Relationship(from_entity=\"Order\", from_attribute=\"CustomerId\", to_entity=\"Customer\", to_attribute=\"CustomerId\")\n",
+					"Relationship(from_entity=\"Shipment\", from_attribute=\"ProductId\", to_entity=\"Product\", to_attribute=\"ProductId\")\n",
+					"Relationship(from_entity=\"Shipment\", from_attribute=\"CustomerId\", to_entity=\"Customer\", to_attribute=\"CustomerId\")"
+				],
+				"execution_count": 17
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"symmetric_graph = kb.show_relationships()\n",
+					"symmetric_graph.render(\"symmetric_graph\", format=\"png\")\n",
+					"symmetric_graph"
+				],
+				"execution_count": 18
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"kb = KB()\n",
+					"kb.make_default()\n",
+					"Entity(\"Patient\", attributes=[Attribute(\"PatientId\", int), Attribute(\"PatientName\", str), Attribute(\"GenderId\", int)])\n",
+					"Entity(\"Unit\", attributes=[Attribute(\"ProviderId\", int), Attribute(\"UnitId\", int)])\n",
+					"Entity(\"Encounter\", attributes=[Attribute(\"EncounterId\", int), Attribute(\"PatientId\", int), Attribute(\"UnitId\", int)])\n",
+					"Entity(\"Provider\", attributes=[Attribute(\"ProviderId\", int), Attribute(\"ProviderName\", str), Attribute(\"GenderId\", int)])\n",
+					"Entity(\"Gender\", attributes=[Attribute(\"GenderId\", int), Attribute(\"GenderDescription\", str)])\n",
+					"Relationship(from_entity=\"Encounter\", from_attribute=\"UnitId\", to_entity=\"Unit\", to_attribute=\"UnitId\")\n",
+					"Relationship(from_entity=\"Encounter\", from_attribute=\"PatientId\", to_entity=\"Patient\", to_attribute=\"PatientId\")\n",
+					"Relationship(from_entity=\"Unit\", from_attribute=\"ProviderId\", to_entity=\"Provider\", to_attribute=\"ProviderId\")\n",
+					"Relationship(from_entity=\"Provider\", from_attribute=\"GenderId\", to_entity=\"Gender\", to_attribute=\"GenderId\")\n",
+					"Relationship(from_entity=\"Patient\", from_attribute=\"GenderId\", to_entity=\"Gender\", to_attribute=\"GenderId\")\n",
+					"\n",
+					"kb.show_relationships()"
+				],
+				"execution_count": 19
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"gender_short_graph = kb.show_relationships()\n",
+					"gender_short_graph.render(\"gender_short_graph\", format=\"png\")\n",
+					"gender_short_graph"
+				],
+				"execution_count": 20
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					""
+				],
+				"execution_count": null
+			}
+		]
+	}
+}
