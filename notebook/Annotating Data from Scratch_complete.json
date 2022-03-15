@@ -1,5 +1,5 @@
 {
-	"name": "Annotating Data from Scratch",
+	"name": "Annotating Data from Scratch_complete",
 	"properties": {
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "486a69cf-50bd-45aa-8dcc-bbc4045c6eae"
+				"spark.autotune.trackingId": "42bcf486-9ba2-411f-baab-39b63fc04583"
 			}
 		},
 		"metadata": {

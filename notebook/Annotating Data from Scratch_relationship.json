@@ -1,0 +1,229 @@
+{
+	"name": "Annotating Data from Scratch_relationship",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "enyatest3",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "78276fe2-2516-41d8-a947-435e5866ee36"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/enyatest3",
+				"name": "enyatest3",
+				"type": "Spark",
+				"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/enyatest3",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"import pandas as pd"
+				],
+				"execution_count": 45
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"df = pd.read_csv('abfss://lizzyusers@lizzycontosolake.dfs.core.windows.net/tests/resources/simple-cdm-model/order1.csv')"
+				],
+				"execution_count": 46
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"import enya"
+				],
+				"execution_count": 47
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from enya.model import Entity\n",
+					"from enya.model.grounding import GroundingFunc\n",
+					"kb = enya.KB()\n",
+					"kb.make_default()"
+				],
+				"execution_count": 48
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from enya.model import LogicalType, Attribute\n",
+					"address_lt = LogicalType(\"Address\", repr_type=str)\n",
+					"integer_id_lt = LogicalType(\"IntegerId\", repr_type=int, tags=[\"id\"])"
+				],
+				"execution_count": 49
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"shipment_to_address = Attribute(\"ShipmentToAddressAt\", address_lt)\n",
+					"order_id = Attribute(\"OrderIdAt\", integer_id_lt)\n",
+					"product_id = Attribute(\"ProductIdAt\", integer_id_lt)"
+				],
+				"execution_count": 50
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"orders = Entity(\"Orders\", attributes=[shipment_to_address, order_id, product_id])\n",
+					"kb.add_grounding(GroundingFunc(lambda: df, attribute_to_column_mapping={shipment_to_address: \"ShipmentToAddress\", order_id: \"OrderId\", product_id: \"ProductId\"}), orders)"
+				],
+				"execution_count": 51
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"sdf = kb.get_data(\"Orders\")"
+				],
+				"execution_count": 52
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"item = Entity(\"Item\", attributes=[shipment_to_address, order_id, product_id])\n",
+					"kb.add_grounding(GroundingFunc(lambda: df, attribute_to_column_mapping={shipment_to_address: \"ShipmentToAddress\", order_id: \"OrderId\", product_id: \"ProductId\"}), item)"
+				],
+				"execution_count": 53
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"sdf_item = kb.get_data(\"Item\")"
+				],
+				"execution_count": 54
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from enya.model import Relationship\n",
+					"order_relation = Relationship(from_entity=\"Orders\", from_attribute=\"ProductIdAt\", to_entity=\"Item\", to_attribute = \"ProductIdAt\")"
+				],
+				"execution_count": 55
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"kb.show_relationships()"
+				],
+				"execution_count": 56
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sdf['ShipmentToAddress']    # by column name as in pandas\r\n",
+					"sdf.ShipmentToAddress       # by column name as accessor in pandas\r\n",
+					"sdf['ShipmentToAddressAt']  # by attribute name\r\n",
+					"sdf.ShipmentToAddressAt     # by attribute name as accessor\r\n",
+					"sdf[shipment_to_address]    # by attribute object"
+				],
+				"execution_count": 57
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#sdf.merge(sdf_item, left_on=\"ProductId\", right_on=\"ProductId\")\r\n",
+					"#sdf.merge(sdf_item)\r\n",
+					"sdf.merge(\"Item\")"
+				],
+				"execution_count": 58
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"dir(sdf.auto)"
+				],
+				"execution_count": 59
+			}
+		]
+	}
+}
