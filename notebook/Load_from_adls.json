@@ -1,0 +1,338 @@
+{
+	"name": "Load_from_adls",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "enyatest3",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "af1ce1e7-0c55-43ba-8abc-ffa36dc5dba3"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/enyatest3",
+				"name": "enyatest3",
+				"type": "Spark",
+				"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/enyatest3",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"# %%configure -f\r\n",
+					"# {\r\n",
+					"#     \"conf\": {\r\n",
+					"#         \"spark.submit.pyFiles\": \r\n",
+					"#         \"abfss://dabandasynapsefs@dabandasynapse.dfs.core.windows.net/enya-0.0.4.post706.dev0+g5c39bcd1.dirty-py3.8.egg\",\r\n",
+					"\r\n",
+					"#     }\r\n",
+					"# }\r\n",
+					""
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"##         # \"spark.executorEnv.ARROW_PRE_0_15_IPC_FORMAT\": \"1\"\n",
+					"\n",
+					"# use this environment file\n",
+					"# name: enya\n",
+					"# channels:\n",
+					"#   - conda-forge\n",
+					"# dependencies:\n",
+					"#   - graphviz\n",
+					"#   - pyyaml\n",
+					"#   - python-graphviz\n",
+					"#   - pip:\n",
+					"#     - azure-identity==1.7.1\n",
+					"#     - azure-storage-file-datalake==12.3.1\n",
+					"#     - azure-core==1.22.1\n",
+					"#     - azure-identity==1.7.1\n",
+					"#     - azure-storage-blob==12.10.0b3\n",
+					"#     - azure-storage-file-datalake==12.3.1\n",
+					""
+				],
+				"execution_count": 19
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"import pandas as pd\r\n",
+					"import sys\r\n",
+					"import os\r\n",
+					"import re\r\n",
+					"import datetime as dt\r\n",
+					"import enya as en"
+				],
+				"execution_count": 20
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Load CDM model\r\n",
+					"# KB = en.KB()\r\n",
+					"# en.backend.set_backend(\"koalas\")\r\n",
+					"# KB.make_default()"
+				],
+				"execution_count": 21
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from azure.identity import InteractiveBrowserCredential, DeviceCodeCredential\r\n",
+					"from cdm import objectmodel\r\n",
+					"from cdm.objectmodel import CdmCorpusDefinition\r\n",
+					"# from cdm.storage.syms import SymsAdapter\r\n",
+					"from cdm.storage import ADLSAdapter\r\n",
+					"\r\n",
+					"\r\n",
+					"adls_endpoint = \"https://dabandasynapse.dfs.core.windows.net/dabandasynapsefs\"\r\n",
+					"root_path = \"jobsnb_cdm\"\r\n",
+					"ADLS_MOUNT = \"adls\"\r\n",
+					"\r\n",
+					"# synapse_endpoint = \"https://dabandasynapse.dev.azuresynapse.net\"\r\n",
+					"TENANT_ID = \"72f988bf-86f1-41af-91ab-2d7cd011db47\"\r\n",
+					"\r\n",
+					"# manifest_path = \"tests/resources/simple-cdm-model-syms/simple.manifest.cdm.json\"\r\n",
+					"# new_manifest_path = \"tests/resources/simple-cdm-model-syms/new_simple.manifest.cdm.json\"\r\n",
+					"\r\n",
+					"\r\n",
+					"cdm_corpus = objectmodel.CdmCorpusDefinition()\r\n",
+					"adls_adapter = ADLSAdapter(hostname=adls_endpoint, root=root_path, token_provider=DeviceCodeCredential(tenant_id=TENANT_ID))\r\n",
+					"# cdm_corpus.storage.mount(ADLS_MOUNT, adls_adapter)"
+				],
+				"execution_count": 22
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# # Load CDM model\n",
+					"# KB = en.KB()\n",
+					"# en.backend.set_backend(\"koalas\")\n",
+					"# KB.make_default()\n",
+					"\n",
+					"# # Register and save parsers first time\n",
+					"# KB.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter})\n",
+					"# sdf = KB.get_data(\"jobsInfo\")\n",
+					"\n",
+					"# message_type = sdf.get_attribute(\"Message\").get_logical_type()\n",
+					"# workspace_type = sdf.get_attribute(\"WorkspaceName\").get_logical_type()\n",
+					"# poolname_type = sdf.get_attribute(\"PoolName\").get_logical_type()\n",
+					"\n",
+					"# message_type.add_component(\n",
+					"#     \"workspace\", workspace_type, str, lambda x: x.split(\".\")[2]\n",
+					"#     )\n",
+					"# message_type.add_component(\n",
+					"#     \"poolname\", poolname_type, str, lambda x: x.split(\".\")[3]\n",
+					"#     )\n",
+					"# print(\"persisting KB\")\n",
+					"# # KB.persist(\"abfss://dabandasynapsefs@dabandasynapse.dfs.core.windows.net/data/enya_kb\")\n",
+					"# KB.persist(\"data/enya_kb\")\n",
+					"# KB.clean()"
+				],
+				"execution_count": 23
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Load CDM model\n",
+					"KB = en.KB()\n",
+					"en.backend.set_backend(\"koalas\")\n",
+					"KB.make_default()"
+				],
+				"execution_count": 24
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"KB.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter})"
+				],
+				"execution_count": 25
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Generate semantic dataframe for job entity\n",
+					"sdf = KB.get_data(\"jobsInfo\")"
+				],
+				"execution_count": 26
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sdf.standardize()"
+				],
+				"execution_count": 27
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sdf.sample(frac = .5)"
+				],
+				"execution_count": 28
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Message column is a string containing multiple information (workspace, poolname, etc)\n",
+					"sdf[\"Message\"].sample(frac = .5)"
+				],
+				"execution_count": 29
+			}
+		]
+	}
+}
