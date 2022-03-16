@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "enyatest3",
+			"referenceName": "enyatest3egg",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "af1ce1e7-0c55-43ba-8abc-ffa36dc5dba3"
+				"spark.autotune.trackingId": "d9a87743-7ddd-4c77-83f1-33efcbc0c81a"
 			}
 		},
 		"metadata": {
@@ -31,10 +31,10 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/enyatest3",
-				"name": "enyatest3",
+				"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/enyatest3egg",
+				"name": "enyatest3egg",
 				"type": "Spark",
-				"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/enyatest3",
+				"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/enyatest3egg",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
@@ -62,6 +62,31 @@
 					""
 				],
 				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"%%configure -f\r\n",
+					"{\r\n",
+					"    \"conf\": {\r\n",
+					"        \"spark.submit.pyFiles\": \r\n",
+					"        \"abfss://lizzyusers@lizzycontosolake.dfs.core.windows.net/enya-0.0.4.post883+g2c32f282.dirty-py3.7.egg\",\r\n",
+					"\r\n",
+					"    }\r\n",
+					"}"
+				],
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -112,6 +137,41 @@
 					}
 				},
 				"source": [
+					"%%writefile config.json\r\n",
+					"{\r\n",
+					"  \"defaultNamespace\" : \"adls\",\r\n",
+					"  \"adapters\" : [\r\n",
+					"    {\r\n",
+					"      \"type\" : \"adls\",\r\n",
+					"      \"config\" : {\r\n",
+					"        \"hostname\" : \"lizzycontosolake.dfs.core.windows.net\",\r\n",
+					"        \"root\" : \"/\",\r\n",
+					"        \"timeout\" : 5000,\r\n",
+					"        \"maximumTimeout\" : 20000,\r\n",
+					"        \"numberOfRetries\" : 2\r\n",
+					"      },\r\n",
+					"      \"namespace\" : \"core\",\r\n",
+					"      \"mainfestPath\" : \"cdm/jobsModel.manifest.cdm.json\"\r\n",
+					"    }\r\n",
+					"  ]\r\n",
+					"}"
+				],
+				"execution_count": 24
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
 					"import pandas as pd\r\n",
 					"import sys\r\n",
 					"import os\r\n",
@@ -119,7 +179,7 @@
 					"import datetime as dt\r\n",
 					"import enya as en"
 				],
-				"execution_count": 20
+				"execution_count": 25
 			},
 			{
 				"cell_type": "code",
@@ -140,7 +200,7 @@
 					"# en.backend.set_backend(\"koalas\")\r\n",
 					"# KB.make_default()"
 				],
-				"execution_count": 21
+				"execution_count": 19
 			},
 			{
 				"cell_type": "code",
@@ -163,8 +223,12 @@
 					"from cdm.storage import ADLSAdapter\r\n",
 					"\r\n",
 					"\r\n",
-					"adls_endpoint = \"https://dabandasynapse.dfs.core.windows.net/dabandasynapsefs\"\r\n",
-					"root_path = \"jobsnb_cdm\"\r\n",
+					"# adls_endpoint = \"https://dabandasynapse.dfs.core.windows.net/dabandasynapsefs\"\r\n",
+					"# root_path = \"jobsnb_cdm\"\r\n",
+					"\r\n",
+					"adls_endpoint = \"https://lizzycontosolake.dfs.core.windows.net/lizzyusers\"\r\n",
+					"root_path = \"data/enya_kb_experiment\"\r\n",
+					"\r\n",
 					"ADLS_MOUNT = \"adls\"\r\n",
 					"\r\n",
 					"# synapse_endpoint = \"https://dabandasynapse.dev.azuresynapse.net\"\r\n",
@@ -178,7 +242,7 @@
 					"adls_adapter = ADLSAdapter(hostname=adls_endpoint, root=root_path, token_provider=DeviceCodeCredential(tenant_id=TENANT_ID))\r\n",
 					"# cdm_corpus.storage.mount(ADLS_MOUNT, adls_adapter)"
 				],
-				"execution_count": 22
+				"execution_count": 26
 			},
 			{
 				"cell_type": "code",
@@ -218,7 +282,7 @@
 					"# KB.persist(\"data/enya_kb\")\n",
 					"# KB.clean()"
 				],
-				"execution_count": 23
+				"execution_count": 21
 			},
 			{
 				"cell_type": "code",
@@ -239,7 +303,7 @@
 					"en.backend.set_backend(\"koalas\")\n",
 					"KB.make_default()"
 				],
-				"execution_count": 24
+				"execution_count": 27
 			},
 			{
 				"cell_type": "code",
@@ -257,7 +321,7 @@
 				"source": [
 					"KB.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter})"
 				],
-				"execution_count": 25
+				"execution_count": 28
 			},
 			{
 				"cell_type": "code",
