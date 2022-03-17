@@ -17,7 +17,9 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "8feb8f08-5645-4d78-8ef0-b7d4e5fed985"
+				"spark.autotune.trackingId": "a1c3b7ea-98a8-43eb-93e4-26af781142e2",
+				"spark.synapse.library.python.env": "name: enya_small\r\nchannels:\r\n  - conda-forge\r\ndependencies:\r\n  - python=3.8\r\n  - cloudpickle\r\n  - graphviz\r\n  - ipykernel\r\n  - ipython\r\n  - jupyter\r\n  - matplotlib\r\n  - numpy>=1.19.2\r\n  - pandas>=1.2\r\n  - pyyaml\r\n  - python-graphviz\r\n  - scikit-learn\r\n  - seaborn\r\n  - pip\r\n  - pip:\r\n    - commondatamodel-objectmodel==1.2.3\r\n    - koalas>=1.8.2\r\n    - pyspark==3.2.1\r\n    - dabl",
+				"spark.synapse.library.python.env.name": "environment_small.yml"
 			}
 		},
 		"metadata": {
@@ -61,7 +63,7 @@
 					"# }\r\n",
 					""
 				],
-				"execution_count": 58
+				"execution_count": 79
 			},
 			{
 				"cell_type": "code",
@@ -86,7 +88,7 @@
 					"#     }\r\n",
 					"# }"
 				],
-				"execution_count": null
+				"execution_count": 80
 			},
 			{
 				"cell_type": "code",
@@ -121,7 +123,7 @@
 					"#     - azure-storage-file-datalake==12.3.1\n",
 					""
 				],
-				"execution_count": null
+				"execution_count": 81
 			},
 			{
 				"cell_type": "code",
@@ -156,7 +158,7 @@
 					"#   ]\r\n",
 					"# }"
 				],
-				"execution_count": null
+				"execution_count": 82
 			},
 			{
 				"cell_type": "code",
@@ -179,7 +181,7 @@
 					"import datetime as dt\r\n",
 					"import enya as en"
 				],
-				"execution_count": null
+				"execution_count": 83
 			},
 			{
 				"cell_type": "code",
@@ -200,7 +202,7 @@
 					"# en.backend.set_backend(\"koalas\")\r\n",
 					"# KB.make_default()"
 				],
-				"execution_count": null
+				"execution_count": 84
 			},
 			{
 				"cell_type": "code",
@@ -228,7 +230,7 @@
 					"# root_path = \"jobsnb_cdm\"\r\n",
 					"\r\n",
 					"adls_endpoint = \"https://lizzycontosolake.dfs.core.windows.net/lizzyusers\"\r\n",
-					"root_path = \"jobsnb_cdm\"\r\n",
+					"root_path = \"cdm\"\r\n",
 					"\r\n",
 					"ADLS_MOUNT = \"adls\"\r\n",
 					"\r\n",
@@ -240,10 +242,10 @@
 					"\r\n",
 					"\r\n",
 					"cdm_corpus = objectmodel.CdmCorpusDefinition()\r\n",
-					"adls_adapter = ADLSAdapter(hostname=adls_endpoint, root=root_path, token=DeviceCodeCredential(tenant_id=TENANT_ID))\r\n",
+					"adls_adapter = ADLSAdapter(hostname=adls_endpoint, root=root_path, token_provider=DeviceCodeCredential(tenant_id=TENANT_ID))\r\n",
 					"# cdm_corpus.storage.mount(ADLS_MOUNT, adls_adapter)"
 				],
-				"execution_count": null
+				"execution_count": 85
 			},
 			{
 				"cell_type": "code",
@@ -283,7 +285,7 @@
 					"# KB.persist(\"data/enya_kb\")\n",
 					"# KB.clean()"
 				],
-				"execution_count": null
+				"execution_count": 86
 			},
 			{
 				"cell_type": "code",
@@ -304,7 +306,7 @@
 					"en.backend.set_backend(\"koalas\")\n",
 					"KB.make_default()"
 				],
-				"execution_count": 56
+				"execution_count": 87
 			},
 			{
 				"cell_type": "code",
@@ -322,7 +324,7 @@
 				"source": [
 					"KB.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter})"
 				],
-				"execution_count": 57
+				"execution_count": 88
 			},
 			{
 				"cell_type": "code",
@@ -341,7 +343,7 @@
 					"# Generate semantic dataframe for job entity\n",
 					"sdf = KB.get_data(\"jobsInfo\")"
 				],
-				"execution_count": null
+				"execution_count": 90
 			},
 			{
 				"cell_type": "code",
@@ -359,7 +361,7 @@
 				"source": [
 					"sdf.standardize()"
 				],
-				"execution_count": null
+				"execution_count": 91
 			},
 			{
 				"cell_type": "code",
@@ -377,7 +379,7 @@
 				"source": [
 					"sdf.sample(frac = .5)"
 				],
-				"execution_count": null
+				"execution_count": 92
 			},
 			{
 				"cell_type": "code",
@@ -396,7 +398,7 @@
 					"# Message column is a string containing multiple information (workspace, poolname, etc)\n",
 					"sdf[\"Message\"].sample(frac = .5)"
 				],
-				"execution_count": null
+				"execution_count": 93
 			}
 		]
 	}
