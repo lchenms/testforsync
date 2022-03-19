@@ -17,9 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a1c3b7ea-98a8-43eb-93e4-26af781142e2",
-				"spark.synapse.library.python.env": "name: enya_small\r\nchannels:\r\n  - conda-forge\r\ndependencies:\r\n  - python=3.8\r\n  - cloudpickle\r\n  - graphviz\r\n  - ipykernel\r\n  - ipython\r\n  - jupyter\r\n  - matplotlib\r\n  - numpy>=1.19.2\r\n  - pandas>=1.2\r\n  - pyyaml\r\n  - python-graphviz\r\n  - scikit-learn\r\n  - seaborn\r\n  - pip\r\n  - pip:\r\n    - commondatamodel-objectmodel==1.2.3\r\n    - koalas>=1.8.2\r\n    - pyspark==3.2.1\r\n    - dabl",
-				"spark.synapse.library.python.env.name": "environment_small.yml"
+				"spark.autotune.trackingId": "f5e7dcc6-72c6-496b-8a2d-c4b50d5f48a3"
 			}
 		},
 		"metadata": {
@@ -63,7 +61,7 @@
 					"# }\r\n",
 					""
 				],
-				"execution_count": 79
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -88,7 +86,7 @@
 					"#     }\r\n",
 					"# }"
 				],
-				"execution_count": 80
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -123,7 +121,7 @@
 					"#     - azure-storage-file-datalake==12.3.1\n",
 					""
 				],
-				"execution_count": 81
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -158,7 +156,7 @@
 					"#   ]\r\n",
 					"# }"
 				],
-				"execution_count": 82
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -181,7 +179,7 @@
 					"import datetime as dt\r\n",
 					"import enya as en"
 				],
-				"execution_count": 83
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -202,7 +200,7 @@
 					"# en.backend.set_backend(\"koalas\")\r\n",
 					"# KB.make_default()"
 				],
-				"execution_count": 84
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -245,7 +243,7 @@
 					"adls_adapter = ADLSAdapter(hostname=adls_endpoint, root=root_path, token_provider=DeviceCodeCredential(tenant_id=TENANT_ID))\r\n",
 					"# cdm_corpus.storage.mount(ADLS_MOUNT, adls_adapter)"
 				],
-				"execution_count": 85
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -285,7 +283,7 @@
 					"# KB.persist(\"data/enya_kb\")\n",
 					"# KB.clean()"
 				],
-				"execution_count": 86
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -306,7 +304,7 @@
 					"en.backend.set_backend(\"koalas\")\n",
 					"KB.make_default()"
 				],
-				"execution_count": 87
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -324,7 +322,7 @@
 				"source": [
 					"KB.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter})"
 				],
-				"execution_count": 88
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -343,7 +341,7 @@
 					"# Generate semantic dataframe for job entity\n",
 					"sdf = KB.get_data(\"jobsInfo\")"
 				],
-				"execution_count": 90
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
@@ -361,7 +359,7 @@
 				"source": [
 					"sdf.standardize()"
 				],
-				"execution_count": 91
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -379,7 +377,7 @@
 				"source": [
 					"sdf.sample(frac = .5)"
 				],
-				"execution_count": 92
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -398,7 +396,7 @@
 					"# Message column is a string containing multiple information (workspace, poolname, etc)\n",
 					"sdf[\"Message\"].sample(frac = .5)"
 				],
-				"execution_count": 93
+				"execution_count": 14
 			}
 		]
 	}
