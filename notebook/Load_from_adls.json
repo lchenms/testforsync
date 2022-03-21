@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "1a18af5b-320f-49e2-81a5-72fdfeb77e34"
+				"spark.autotune.trackingId": "a829d139-ea07-42f3-bad1-3cc3d954d2ae"
 			}
 		},
 		"metadata": {
@@ -453,6 +453,24 @@
 					"KB.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter_write})"
 				],
 				"execution_count": 62
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"KB.persist(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter_write})"
+				],
+				"execution_count": 66
 			},
 			{
 				"cell_type": "code",
