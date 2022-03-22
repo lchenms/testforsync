@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a1f22b91-5c93-49b3-bf7a-29852e401e04"
+				"spark.autotune.trackingId": "a5cc5336-4095-40ad-a147-f0e87d207706"
 			}
 		},
 		"metadata": {
@@ -69,7 +69,7 @@
 					"import datetime as dt\r\n",
 					"import enya as en"
 				],
-				"execution_count": 1
+				"execution_count": 39
 			},
 			{
 				"cell_type": "code",
@@ -102,7 +102,7 @@
 					"cdm_corpus = objectmodel.CdmCorpusDefinition()\r\n",
 					"adls_adapter = ADLSAdapter(hostname=adls_endpoint, root=root_path, token_provider=DeviceCodeCredential(tenant_id=TENANT_ID))"
 				],
-				"execution_count": 2
+				"execution_count": 40
 			},
 			{
 				"cell_type": "code",
@@ -123,7 +123,7 @@
 					"en.backend.set_backend(\"koalas\")\n",
 					"KB.make_default()"
 				],
-				"execution_count": 3
+				"execution_count": 41
 			},
 			{
 				"cell_type": "code",
@@ -141,7 +141,7 @@
 				"source": [
 					"KB.load_from_manifest(\"adls:/simple.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter})"
 				],
-				"execution_count": 4
+				"execution_count": 42
 			},
 			{
 				"cell_type": "code",
@@ -159,7 +159,7 @@
 				"source": [
 					"KB.get_entities()"
 				],
-				"execution_count": 5
+				"execution_count": 43
 			},
 			{
 				"cell_type": "code",
@@ -177,7 +177,7 @@
 				"source": [
 					"KB.show_relationships()"
 				],
-				"execution_count": 6
+				"execution_count": 44
 			},
 			{
 				"cell_type": "code",
@@ -195,7 +195,7 @@
 				"source": [
 					"KB.show_relationships(include_attributes=True)"
 				],
-				"execution_count": 7
+				"execution_count": 45
 			},
 			{
 				"cell_type": "code",
@@ -214,7 +214,7 @@
 					"# Generate semantic dataframe for item\n",
 					"sdf = KB.get_data(\"Order\")"
 				],
-				"execution_count": 8
+				"execution_count": 46
 			},
 			{
 				"cell_type": "code",
@@ -232,7 +232,7 @@
 				"source": [
 					"sdf"
 				],
-				"execution_count": 9
+				"execution_count": 47
 			},
 			{
 				"cell_type": "code",
@@ -250,7 +250,25 @@
 				"source": [
 					"KB.persist(\"data_test\")"
 				],
-				"execution_count": 16
+				"execution_count": 48
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from enya.kb.kb import load_kb"
+				],
+				"execution_count": 49
 			},
 			{
 				"cell_type": "code",
@@ -268,7 +286,79 @@
 				"source": [
 					"KB1 = load_kb(\"data_test\")"
 				],
-				"execution_count": 17
+				"execution_count": 50
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"KB1.get_entities()"
+				],
+				"execution_count": 51
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"KB1.show_relationships()"
+				],
+				"execution_count": 52
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"KB1.show_relationships(include_attributes=True)"
+				],
+				"execution_count": 53
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sdf_order = KB1.get_data(\"Order\")"
+				],
+				"execution_count": 54
 			},
 			{
 				"cell_type": "code",
