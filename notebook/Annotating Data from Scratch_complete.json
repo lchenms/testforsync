@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "42bcf486-9ba2-411f-baab-39b63fc04583"
+				"spark.autotune.trackingId": "f5fdd6c7-12fc-4774-b7ec-42c5a41be5f0"
 			}
 		},
 		"metadata": {
@@ -53,7 +53,7 @@
 				"source": [
 					"import pandas as pd"
 				],
-				"execution_count": 1
+				"execution_count": 24
 			},
 			{
 				"cell_type": "markdown",
@@ -84,7 +84,7 @@
 				"source": [
 					"df = pd.read_csv('abfss://lizzyusers@lizzycontosolake.dfs.core.windows.net/tests/resources/simple-cdm-model/order1.csv')"
 				],
-				"execution_count": 5
+				"execution_count": 25
 			},
 			{
 				"cell_type": "code",
@@ -103,7 +103,7 @@
 					"import enya\r\n",
 					"sdf = enya.SemanticDataFrame(df, {})"
 				],
-				"execution_count": 7
+				"execution_count": 26
 			},
 			{
 				"cell_type": "code",
@@ -121,7 +121,7 @@
 				"source": [
 					"sdf"
 				],
-				"execution_count": 8
+				"execution_count": 27
 			},
 			{
 				"cell_type": "code",
@@ -139,7 +139,7 @@
 				"source": [
 					"print(sdf.attributes)"
 				],
-				"execution_count": 9
+				"execution_count": 28
 			},
 			{
 				"cell_type": "markdown",
@@ -172,7 +172,7 @@
 					"address_lt = LogicalType(\"Address\", repr_type=str)\r\n",
 					"integer_id_lt = LogicalType(\"IntegerId\", repr_type=int, tags=[\"id\"])"
 				],
-				"execution_count": 10
+				"execution_count": 29
 			},
 			{
 				"cell_type": "code",
@@ -192,7 +192,7 @@
 					"order_id = Attribute(\"OrderIdAt\", integer_id_lt)\r\n",
 					"product_id = Attribute(\"ProductIdAt\", integer_id_lt)"
 				],
-				"execution_count": 11
+				"execution_count": 30
 			},
 			{
 				"cell_type": "code",
@@ -213,7 +213,7 @@
 					"sdf.set_attribute(\"ProductId\", product_id)\r\n",
 					"print(sdf.attributes)"
 				],
-				"execution_count": 12
+				"execution_count": 31
 			},
 			{
 				"cell_type": "code",
@@ -231,7 +231,7 @@
 				"source": [
 					"sdf1 = enya.SemanticDataFrame(df, attribute_to_column_mapping={shipment_to_address: \"ShipmentToAddress\", order_id: \"OrderId\", product_id: \"ProductId\"})"
 				],
-				"execution_count": 15
+				"execution_count": 32
 			},
 			{
 				"cell_type": "code",
@@ -249,7 +249,7 @@
 				"source": [
 					"sdf1"
 				],
-				"execution_count": 16
+				"execution_count": 33
 			},
 			{
 				"cell_type": "code",
@@ -269,7 +269,7 @@
 					"shipment_to_address_cat = Attribute(\"ShipmentToAddressCatAt\", address_lt)\r\n",
 					"sdf.set_attribute(\"ShipmentToAddress\", shipment_to_address_cat)"
 				],
-				"execution_count": 17
+				"execution_count": 34
 			},
 			{
 				"cell_type": "markdown",
@@ -300,10 +300,47 @@
 				"source": [
 					"from enya.model import Entity\r\n",
 					"from enya.model.grounding import GroundingFunc\r\n",
-					"kb = enya.KB()\r\n",
-					"kb.make_default()"
+					"kb = enya.KB()"
+				],
+				"execution_count": 35
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from enya.backend import set_backend, get_backend\r\n",
+					"set_backend('pandas')\r\n",
+					"print(get_backend())"
 				],
 				"execution_count": 36
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"kb.make_default()"
+				],
+				"execution_count": 37
 			},
 			{
 				"cell_type": "code",
@@ -322,7 +359,7 @@
 					"orders = Entity(\"Orders\", attributes=[shipment_to_address, order_id, product_id])\r\n",
 					"kb.add_grounding(GroundingFunc(lambda: df, attribute_to_column_mapping={shipment_to_address: \"ShipmentToAddress\", order_id: \"OrderId\", product_id: \"ProductId\"}), orders)"
 				],
-				"execution_count": 37
+				"execution_count": 38
 			},
 			{
 				"cell_type": "code",
@@ -340,7 +377,7 @@
 				"source": [
 					"sdf = kb.get_data(\"Orders\")"
 				],
-				"execution_count": 38
+				"execution_count": 39
 			},
 			{
 				"cell_type": "code",
@@ -358,7 +395,7 @@
 				"source": [
 					"sdf"
 				],
-				"execution_count": 39
+				"execution_count": 40
 			},
 			{
 				"cell_type": "code",
@@ -379,7 +416,7 @@
 					"sdf.set_attribute(\"ProductId\", product_id)\r\n",
 					"print(sdf.attributes)"
 				],
-				"execution_count": 48
+				"execution_count": 41
 			},
 			{
 				"cell_type": "code",
@@ -402,7 +439,7 @@
 					"orders = Entity(\"Orders_from_file\", attributes=[shipment_to_address, order_id, product_id])\r\n",
 					"kb.add_grounding(grounding, orders)"
 				],
-				"execution_count": 40
+				"execution_count": 42
 			},
 			{
 				"cell_type": "code",
@@ -420,7 +457,7 @@
 				"source": [
 					"sdf1 = kb.get_data(\"Orders_from_file\")"
 				],
-				"execution_count": 41
+				"execution_count": 43
 			},
 			{
 				"cell_type": "code",
@@ -438,7 +475,7 @@
 				"source": [
 					"sdf1"
 				],
-				"execution_count": 42
+				"execution_count": 44
 			},
 			{
 				"cell_type": "code",
@@ -456,7 +493,7 @@
 				"source": [
 					"from enya.model import Relationship"
 				],
-				"execution_count": 44
+				"execution_count": 45
 			},
 			{
 				"cell_type": "code",
@@ -474,7 +511,7 @@
 				"source": [
 					"order_relation = Relationship(from_entity=\"Orders\", from_attribute=\"ProductIdAt\", to_entity=\"Item\", to_attribute = \"ProductIdAt\")"
 				],
-				"execution_count": 49
+				"execution_count": 46
 			},
 			{
 				"cell_type": "code",
@@ -492,7 +529,7 @@
 				"source": [
 					"kb.show_relationships()"
 				],
-				"execution_count": 47
+				"execution_count": null
 			}
 		]
 	}

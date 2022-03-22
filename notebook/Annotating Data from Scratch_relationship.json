@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "78276fe2-2516-41d8-a947-435e5866ee36"
+				"spark.autotune.trackingId": "b904cc2a-514d-406a-b696-87633c9015cc"
 			}
 		},
 		"metadata": {
@@ -53,7 +53,7 @@
 				"source": [
 					"import pandas as pd"
 				],
-				"execution_count": 45
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -71,7 +71,7 @@
 				"source": [
 					"df = pd.read_csv('abfss://lizzyusers@lizzycontosolake.dfs.core.windows.net/tests/resources/simple-cdm-model/order1.csv')"
 				],
-				"execution_count": 46
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
@@ -89,17 +89,54 @@
 				"source": [
 					"import enya"
 				],
-				"execution_count": 47
+				"execution_count": 29
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"from enya.model import Entity\n",
 					"from enya.model.grounding import GroundingFunc\n",
-					"kb = enya.KB()\n",
+					"kb = enya.KB()"
+				],
+				"execution_count": 30
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from enya.backend import set_backend, get_backend\r\n",
+					"set_backend('koalas')\r\n",
+					"print(get_backend())"
+				],
+				"execution_count": 31
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
 					"kb.make_default()"
 				],
-				"execution_count": 48
+				"execution_count": 32
 			},
 			{
 				"cell_type": "code",
@@ -108,7 +145,7 @@
 					"address_lt = LogicalType(\"Address\", repr_type=str)\n",
 					"integer_id_lt = LogicalType(\"IntegerId\", repr_type=int, tags=[\"id\"])"
 				],
-				"execution_count": 49
+				"execution_count": 33
 			},
 			{
 				"cell_type": "code",
@@ -117,7 +154,7 @@
 					"order_id = Attribute(\"OrderIdAt\", integer_id_lt)\n",
 					"product_id = Attribute(\"ProductIdAt\", integer_id_lt)"
 				],
-				"execution_count": 50
+				"execution_count": 34
 			},
 			{
 				"cell_type": "code",
@@ -125,14 +162,14 @@
 					"orders = Entity(\"Orders\", attributes=[shipment_to_address, order_id, product_id])\n",
 					"kb.add_grounding(GroundingFunc(lambda: df, attribute_to_column_mapping={shipment_to_address: \"ShipmentToAddress\", order_id: \"OrderId\", product_id: \"ProductId\"}), orders)"
 				],
-				"execution_count": 51
+				"execution_count": 35
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"sdf = kb.get_data(\"Orders\")"
 				],
-				"execution_count": 52
+				"execution_count": 36
 			},
 			{
 				"cell_type": "code",
@@ -140,14 +177,14 @@
 					"item = Entity(\"Item\", attributes=[shipment_to_address, order_id, product_id])\n",
 					"kb.add_grounding(GroundingFunc(lambda: df, attribute_to_column_mapping={shipment_to_address: \"ShipmentToAddress\", order_id: \"OrderId\", product_id: \"ProductId\"}), item)"
 				],
-				"execution_count": 53
+				"execution_count": 37
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"sdf_item = kb.get_data(\"Item\")"
 				],
-				"execution_count": 54
+				"execution_count": 38
 			},
 			{
 				"cell_type": "code",
@@ -155,14 +192,14 @@
 					"from enya.model import Relationship\n",
 					"order_relation = Relationship(from_entity=\"Orders\", from_attribute=\"ProductIdAt\", to_entity=\"Item\", to_attribute = \"ProductIdAt\")"
 				],
-				"execution_count": 55
+				"execution_count": 39
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"kb.show_relationships()"
 				],
-				"execution_count": 56
+				"execution_count": 40
 			},
 			{
 				"cell_type": "code",
@@ -184,7 +221,7 @@
 					"sdf.ShipmentToAddressAt     # by attribute name as accessor\r\n",
 					"sdf[shipment_to_address]    # by attribute object"
 				],
-				"execution_count": 57
+				"execution_count": 41
 			},
 			{
 				"cell_type": "code",
@@ -204,7 +241,7 @@
 					"#sdf.merge(sdf_item)\r\n",
 					"sdf.merge(\"Item\")"
 				],
-				"execution_count": 58
+				"execution_count": 42
 			},
 			{
 				"cell_type": "code",
@@ -222,7 +259,25 @@
 				"source": [
 					"dir(sdf.auto)"
 				],
-				"execution_count": 59
+				"execution_count": 43
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sdf.merge(sdf_item)"
+				],
+				"execution_count": 44
 			}
 		]
 	}
