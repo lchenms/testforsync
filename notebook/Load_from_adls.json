@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a829d139-ea07-42f3-bad1-3cc3d954d2ae"
+				"spark.autotune.trackingId": "3fd5fc2d-3576-460d-96d2-92f851310ac6"
 			}
 		},
 		"metadata": {
@@ -61,7 +61,7 @@
 					"# }\r\n",
 					""
 				],
-				"execution_count": 45
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -86,7 +86,7 @@
 					"#     }\r\n",
 					"# }"
 				],
-				"execution_count": 46
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -121,7 +121,7 @@
 					"#     - azure-storage-file-datalake==12.3.1\n",
 					""
 				],
-				"execution_count": 47
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -156,7 +156,7 @@
 					"#   ]\r\n",
 					"# }"
 				],
-				"execution_count": 48
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -179,7 +179,7 @@
 					"import datetime as dt\r\n",
 					"import enya as en"
 				],
-				"execution_count": 49
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -200,7 +200,7 @@
 					"# en.backend.set_backend(\"koalas\")\r\n",
 					"# KB.make_default()"
 				],
-				"execution_count": 50
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -243,7 +243,7 @@
 					"adls_adapter = ADLSAdapter(hostname=adls_endpoint, root=root_path, token_provider=DeviceCodeCredential(tenant_id=TENANT_ID))\r\n",
 					"# cdm_corpus.storage.mount(ADLS_MOUNT, adls_adapter)"
 				],
-				"execution_count": 51
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -283,7 +283,7 @@
 					"# KB.persist(\"data/enya_kb\")\n",
 					"# KB.clean()"
 				],
-				"execution_count": 52
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -301,10 +301,10 @@
 				"source": [
 					"# Load CDM model\n",
 					"KB = en.KB()\n",
-					"en.backend.set_backend(\"koalas\")\n",
+					"en.backend.set_backend(\"pandas\")\n",
 					"KB.make_default()"
 				],
-				"execution_count": 53
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -322,7 +322,7 @@
 				"source": [
 					"KB.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter})"
 				],
-				"execution_count": 54
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -341,7 +341,7 @@
 					"# Generate semantic dataframe for job entity\n",
 					"sdf = KB.get_data(\"jobsInfo\")"
 				],
-				"execution_count": 55
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -359,7 +359,7 @@
 				"source": [
 					"sdf.standardize()"
 				],
-				"execution_count": 56
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -377,7 +377,7 @@
 				"source": [
 					"sdf.sample(frac = .5)"
 				],
-				"execution_count": 57
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -396,7 +396,7 @@
 					"# Message column is a string containing multiple information (workspace, poolname, etc)\n",
 					"sdf[\"Message\"].sample(frac = .5)"
 				],
-				"execution_count": 58
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -415,7 +415,7 @@
 					"root_path_write = \"enya_kb\"\r\n",
 					"adls_adapter_write = ADLSAdapter(hostname=adls_endpoint, root=root_path_write, token_provider=DeviceCodeCredential(tenant_id=TENANT_ID))"
 				],
-				"execution_count": 59
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -433,7 +433,7 @@
 				"source": [
 					"KB.write_to_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter_write})"
 				],
-				"execution_count": 60
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -452,7 +452,7 @@
 					"KB.clean()\r\n",
 					"KB.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter_write})"
 				],
-				"execution_count": 62
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -470,7 +470,7 @@
 				"source": [
 					"KB.persist(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter_write})"
 				],
-				"execution_count": 66
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -488,7 +488,7 @@
 				"source": [
 					"sdf_write = KB.get_data(\"jobsInfo\")"
 				],
-				"execution_count": 65
+				"execution_count": null
 			}
 		]
 	}

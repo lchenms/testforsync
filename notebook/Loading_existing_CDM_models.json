@@ -1,0 +1,239 @@
+{
+	"name": "Loading_existing_CDM_models",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "enyatest3",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "cb0b3d88-6733-433a-a18c-981d16639894"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/enyatest3",
+				"name": "enyatest3",
+				"type": "Spark",
+				"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/enyatest3",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 10,
+				"cores": 8,
+				"memory": 56,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"import pandas as pd\r\n",
+					"import sys\r\n",
+					"import os\r\n",
+					"import re\r\n",
+					"import datetime as dt\r\n",
+					"import enya as en"
+				],
+				"execution_count": 80
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from azure.identity import InteractiveBrowserCredential\r\n",
+					"from azure.identity import DeviceCodeCredential\r\n",
+					"from cdm import objectmodel\r\n",
+					"from cdm.objectmodel import CdmCorpusDefinition\r\n",
+					"# from cdm.storage.syms import SymsAdapter\r\n",
+					"from cdm.storage import ADLSAdapter\r\n",
+					"\r\n",
+					"adls_endpoint = \"https://lizzycontosolake.dfs.core.windows.net/lizzyusers\"\r\n",
+					"root_path = \"tests/resources/simple-cdm-model\"\r\n",
+					"\r\n",
+					"ADLS_MOUNT = \"adls\"\r\n",
+					"\r\n",
+					"TENANT_ID = \"72f988bf-86f1-41af-91ab-2d7cd011db47\"\r\n",
+					"\r\n",
+					"cdm_corpus = objectmodel.CdmCorpusDefinition()\r\n",
+					"adls_adapter = ADLSAdapter(hostname=adls_endpoint, root=root_path, token_provider=DeviceCodeCredential(tenant_id=TENANT_ID))"
+				],
+				"execution_count": 81
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Load CDM model\n",
+					"KB = en.KB()\n",
+					"en.backend.set_backend(\"koalas\")\n",
+					"KB.make_default()"
+				],
+				"execution_count": 82
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"KB.load_from_manifest(\"adls:/simple.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter})"
+				],
+				"execution_count": 83
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"KB.get_entities()"
+				],
+				"execution_count": 84
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"KB.show_relationships()"
+				],
+				"execution_count": 85
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"KB.show_relationships(include_attributes=True)"
+				],
+				"execution_count": 86
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Generate semantic dataframe for item\n",
+					"sdf = KB.get_data(\"Order\")"
+				],
+				"execution_count": 93
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sdf"
+				],
+				"execution_count": 94
+			}
+		]
+	}
+}
