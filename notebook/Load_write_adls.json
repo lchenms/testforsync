@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "118dcb50-69b3-4e23-be22-b2be8bc73106"
+				"spark.autotune.trackingId": "a820a98a-0065-4c02-9869-4b9d58753a3f"
 			}
 		},
 		"metadata": {
@@ -214,7 +214,7 @@
 					"# Message column is a string containing multiple information (workspace, poolname, etc)\n",
 					"sdf[\"Message\"].sample(frac = .5)"
 				],
-				"execution_count": null
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -230,10 +230,10 @@
 					}
 				},
 				"source": [
-					"root_path_write = \"enya_kb\"\r\n",
+					"root_path_write = \"write_results\"\r\n",
 					"adls_adapter_write = ADLSAdapter(hostname=adls_endpoint, root=root_path_write, token_provider=DeviceCodeCredential(tenant_id=TENANT_ID))"
 				],
-				"execution_count": 42
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -251,7 +251,7 @@
 				"source": [
 					"KB.write_to_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter_write})"
 				],
-				"execution_count": null
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
@@ -270,24 +270,6 @@
 					"KB.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter_write})"
 				],
 				"execution_count": 43
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"KB.persist(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter_write})"
-				],
-				"execution_count": null
 			},
 			{
 				"cell_type": "code",
