@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "517de220-bebc-4500-880b-ac032be05ad1"
+				"spark.autotune.trackingId": "ca7411b0-c1cf-49ab-8e2f-1cc3e981c6f2"
 			}
 		},
 		"metadata": {
@@ -71,7 +71,7 @@
 					"logging.getLogger('cdm-python').setLevel(logging.ERROR)\n",
 					""
 				],
-				"execution_count": 9
+				"execution_count": 13
 			},
 			{
 				"cell_type": "markdown",
