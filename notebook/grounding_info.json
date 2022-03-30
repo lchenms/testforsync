@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ea4803fe-b39e-4dcb-9dc3-f6c33e89bdde"
+				"spark.autotune.trackingId": "37e4c2dc-3d77-4db5-9687-40defba2f3e4"
 			}
 		},
 		"metadata": {
@@ -50,116 +50,6 @@
 		"cells": [
 			{
 				"cell_type": "code",
-				"source": [
-					"# %%configure -f\r\n",
-					"# {\r\n",
-					"#     \"conf\": {\r\n",
-					"#         \"spark.submit.pyFiles\": \r\n",
-					"#         \"abfss://dabandasynapsefs@dabandasynapse.dfs.core.windows.net/enya-0.0.4.post706.dev0+g5c39bcd1.dirty-py3.8.egg\",\r\n",
-					"\r\n",
-					"#     }\r\n",
-					"# }\r\n",
-					""
-				],
-				"execution_count": 49
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"# %%configure -f\r\n",
-					"# {\r\n",
-					"#     \"conf\": {\r\n",
-					"#         \"spark.submit.pyFiles\": \r\n",
-					"#         \"abfss://lizzyusers@lizzycontosolake.dfs.core.windows.net/enya-0.0.4.post883+g2c32f282.dirty-py3.7.egg\",\r\n",
-					"\r\n",
-					"#     }\r\n",
-					"# }"
-				],
-				"execution_count": 34
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"##         # \"spark.executorEnv.ARROW_PRE_0_15_IPC_FORMAT\": \"1\"\n",
-					"\n",
-					"# use this environment file\n",
-					"# name: enya\n",
-					"# channels:\n",
-					"#   - conda-forge\n",
-					"# dependencies:\n",
-					"#   - graphviz\n",
-					"#   - pyyaml\n",
-					"#   - python-graphviz\n",
-					"#   - pip:\n",
-					"#     - azure-identity==1.7.1\n",
-					"#     - azure-storage-file-datalake==12.3.1\n",
-					"#     - azure-core==1.22.1\n",
-					"#     - azure-identity==1.7.1\n",
-					"#     - azure-storage-blob==12.10.0b3\n",
-					"#     - azure-storage-file-datalake==12.3.1\n",
-					""
-				],
-				"execution_count": 35
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"# %%writefile config.json\r\n",
-					"# {\r\n",
-					"#   \"defaultNamespace\" : \"adls\",\r\n",
-					"#   \"adapters\" : [\r\n",
-					"#     {\r\n",
-					"#       \"type\" : \"adls\",\r\n",
-					"#       \"config\" : {\r\n",
-					"#         \"hostname\" : \"lizzycontosolake.dfs.core.windows.net\",\r\n",
-					"#         \"root\" : \"/\",\r\n",
-					"#         \"timeout\" : 5000,\r\n",
-					"#         \"maximumTimeout\" : 20000,\r\n",
-					"#         \"numberOfRetries\" : 2\r\n",
-					"#       },\r\n",
-					"#       \"namespace\" : \"core\",\r\n",
-					"#       \"mainfestPath\" : \"cdm/jobsModel.manifest.cdm.json\"\r\n",
-					"#     }\r\n",
-					"#   ]\r\n",
-					"# }"
-				],
-				"execution_count": 36
-			},
-			{
-				"cell_type": "code",
 				"metadata": {
 					"jupyter": {
 						"source_hidden": false,
@@ -179,28 +69,7 @@
 					"import datetime as dt\r\n",
 					"import enya as en"
 				],
-				"execution_count": 37
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"# Load CDM model\r\n",
-					"# KB = en.KB()\r\n",
-					"# en.backend.set_backend(\"koalas\")\r\n",
-					"# KB.make_default()"
-				],
-				"execution_count": 38
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -223,67 +92,17 @@
 					"# from cdm.storage.syms import SymsAdapter\r\n",
 					"from cdm.storage import ADLSAdapter\r\n",
 					"\r\n",
-					"\r\n",
-					"# adls_endpoint = \"https://dabandasynapse.dfs.core.windows.net/dabandasynapsefs\"\r\n",
-					"# root_path = \"jobsnb_cdm\"\r\n",
-					"\r\n",
 					"adls_endpoint = \"https://lizzycontosolake.dfs.core.windows.net/lizzyusers\"\r\n",
 					"root_path = \"cdm\"\r\n",
 					"\r\n",
 					"ADLS_MOUNT = \"adls\"\r\n",
 					"\r\n",
-					"# synapse_endpoint = \"https://dabandasynapse.dev.azuresynapse.net\"\r\n",
 					"TENANT_ID = \"72f988bf-86f1-41af-91ab-2d7cd011db47\"\r\n",
 					"\r\n",
-					"# manifest_path = \"tests/resources/simple-cdm-model-syms/simple.manifest.cdm.json\"\r\n",
-					"# new_manifest_path = \"tests/resources/simple-cdm-model-syms/new_simple.manifest.cdm.json\"\r\n",
-					"\r\n",
-					"\r\n",
 					"cdm_corpus = objectmodel.CdmCorpusDefinition()\r\n",
-					"adls_adapter = ADLSAdapter(hostname=adls_endpoint, root=root_path, token_provider=DeviceCodeCredential(tenant_id=TENANT_ID))\r\n",
-					"# cdm_corpus.storage.mount(ADLS_MOUNT, adls_adapter)"
+					"adls_adapter = ADLSAdapter(hostname=adls_endpoint, root=root_path, token_provider=DeviceCodeCredential(tenant_id=TENANT_ID))"
 				],
-				"execution_count": 39
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"# # Load CDM model\n",
-					"# KB = en.KB()\n",
-					"# en.backend.set_backend(\"koalas\")\n",
-					"# KB.make_default()\n",
-					"\n",
-					"# # Register and save parsers first time\n",
-					"# KB.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter})\n",
-					"# sdf = KB.get_data(\"jobsInfo\")\n",
-					"\n",
-					"# message_type = sdf.get_attribute(\"Message\").get_logical_type()\n",
-					"# workspace_type = sdf.get_attribute(\"WorkspaceName\").get_logical_type()\n",
-					"# poolname_type = sdf.get_attribute(\"PoolName\").get_logical_type()\n",
-					"\n",
-					"# message_type.add_component(\n",
-					"#     \"workspace\", workspace_type, str, lambda x: x.split(\".\")[2]\n",
-					"#     )\n",
-					"# message_type.add_component(\n",
-					"#     \"poolname\", poolname_type, str, lambda x: x.split(\".\")[3]\n",
-					"#     )\n",
-					"# print(\"persisting KB\")\n",
-					"# # KB.persist(\"abfss://dabandasynapsefs@dabandasynapse.dfs.core.windows.net/data/enya_kb\")\n",
-					"# KB.persist(\"data/enya_kb\")\n",
-					"# KB.clean()"
-				],
-				"execution_count": null
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -304,7 +123,7 @@
 					"en.backend.set_backend(\"koalas\")\n",
 					"KB.make_default()"
 				],
-				"execution_count": 40
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -322,7 +141,7 @@
 				"source": [
 					"KB.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter})"
 				],
-				"execution_count": null
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -341,7 +160,7 @@
 					"# Generate semantic dataframe for job entity\n",
 					"sdf = KB.get_data(\"jobsInfo\")"
 				],
-				"execution_count": null
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -359,7 +178,7 @@
 				"source": [
 					"sdf.standardize()"
 				],
-				"execution_count": null
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -377,7 +196,7 @@
 				"source": [
 					"sdf.sample(frac = .5)"
 				],
-				"execution_count": null
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -396,7 +215,7 @@
 					"# Message column is a string containing multiple information (workspace, poolname, etc)\n",
 					"sdf[\"Message\"].sample(frac = .5)"
 				],
-				"execution_count": null
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -415,7 +234,7 @@
 					"root_path_write = \"enya_kb\"\r\n",
 					"adls_adapter_write = ADLSAdapter(hostname=adls_endpoint, root=root_path_write, token_provider=DeviceCodeCredential(tenant_id=TENANT_ID))"
 				],
-				"execution_count": 42
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -433,7 +252,7 @@
 				"source": [
 					"KB.write_to_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter_write})"
 				],
-				"execution_count": null
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -452,24 +271,6 @@
 					"KB.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter_write})"
 				],
 				"execution_count": 43
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"KB.persist(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter_write})"
-				],
-				"execution_count": null
 			},
 			{
 				"cell_type": "code",
