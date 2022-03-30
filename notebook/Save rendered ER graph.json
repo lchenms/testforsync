@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "593f0350-80c0-460a-9739-9971e9f603e9"
+				"spark.autotune.trackingId": "d21c51e6-33a9-4391-b406-f606d30730d2"
 			}
 		},
 		"metadata": {
@@ -109,10 +109,10 @@
 					"from pyspark.sql import SparkSession\r\n",
 					"\r\n",
 					"# Azure storage access info\r\n",
-					"blob_account_name = 'suleplayground' # replace with your blob name\r\n",
-					"blob_container_name = 'suleplayground' # replace with your container name\r\n",
+					"blob_account_name = 'lizzycontosolake' # replace with your blob name\r\n",
+					"blob_container_name = 'lizzyusers' # replace with your container name\r\n",
 					"blob_relative_path = '' # replace with your relative folder path\r\n",
-					"linked_service_name = 'sp' # replace with your linked service name\r\n",
+					"linked_service_name = 'lizzy-myworkspace-WorkspaceDefaultStorage' # replace with your linked service name\r\n",
 					"\r\n",
 					"blob_sas_token = mssparkutils.credentials.getConnectionStringOrCreds(linked_service_name)\r\n",
 					"\r\n",
@@ -123,7 +123,7 @@
 					"spark.conf.set('fs.azure.sas.%s.%s.blob.core.windows.net' % (blob_container_name, blob_account_name), blob_sas_token)\r\n",
 					"print('Remote blob path: ' + wasb_path)"
 				],
-				"execution_count": 2
+				"execution_count": 6
 			},
 			{
 				"cell_type": "markdown",
@@ -155,7 +155,7 @@
 					"from notebookutils import mssparkutils\r\n",
 					"mssparkutils.fs.help()"
 				],
-				"execution_count": 3
+				"execution_count": 7
 			},
 			{
 				"cell_type": "markdown",
@@ -186,7 +186,7 @@
 				"source": [
 					"mssparkutils.fs.ls(wasb_path)"
 				],
-				"execution_count": 4
+				"execution_count": 8
 			},
 			{
 				"cell_type": "markdown",
@@ -217,7 +217,7 @@
 				"source": [
 					"spark.read.csv(wasb_path+'/data/example_mixed_timestamps.csv', header=True)"
 				],
-				"execution_count": 5
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
