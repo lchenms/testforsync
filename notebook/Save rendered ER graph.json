@@ -1,0 +1,744 @@
+{
+	"name": "Save rendered ER graph",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "18a5489d-9a23-4505-acec-0e25ed9a74c4"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Automatically access fields within a column based on its logical type\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"tags": []
+				},
+				"source": [
+					"import pandas as pd\n",
+					"import sys\n",
+					"import os\n",
+					"import re\n",
+					"import datetime as dt\n",
+					"import enya as en\n",
+					"import logging\n",
+					"logging.getLogger('cdm-python').setLevel(logging.ERROR)\n",
+					""
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Data Access\r\n",
+					"Our data is securely stored in Azure Blob storage. The spark cluster is running with a managed identity which\r\n",
+					"has been granted access to the storage. But most of the spark operations can only reach Azure blobs via SAS.\r\n",
+					"\r\n",
+					"We do **not** want to hardcode a SAS token here, and it's painful to maintain SAS tokens in Azure Key Vault. But\r\n",
+					"we've got a work-around! We created a linked service in Synapse, and this is securely storing the SAS credentials.\r\n",
+					"At runtime, we can request this info and create a wasbs: protocol handler, which much of spark can use directly."
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from pyspark.sql import SparkSession\r\n",
+					"\r\n",
+					"# Azure storage access info\r\n",
+					"blob_account_name = 'suleplayground' # replace with your blob name\r\n",
+					"blob_container_name = 'suleplayground' # replace with your container name\r\n",
+					"blob_relative_path = '' # replace with your relative folder path\r\n",
+					"linked_service_name = 'sp' # replace with your linked service name\r\n",
+					"\r\n",
+					"blob_sas_token = mssparkutils.credentials.getConnectionStringOrCreds(linked_service_name)\r\n",
+					"\r\n",
+					"# Allow SPARK to access from Blob remotely\r\n",
+					"\r\n",
+					"wasb_path = 'wasbs://%s@%s.blob.core.windows.net/%s' % (blob_container_name, blob_account_name, blob_relative_path)\r\n",
+					"\r\n",
+					"spark.conf.set('fs.azure.sas.%s.%s.blob.core.windows.net' % (blob_container_name, blob_account_name), blob_sas_token)\r\n",
+					"print('Remote blob path: ' + wasb_path)"
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"There is also the useful mssparkutils class, which gives us some nice file system methods which are \"wasbs: aware\":"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from notebookutils import mssparkutils\r\n",
+					"mssparkutils.fs.help()"
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Foe example, let's get a file directory and see that the various subdirectories are reachable:"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"mssparkutils.fs.ls(wasb_path)"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Spark operations can use wasbs: directly:"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"spark.read.csv(wasb_path+'/data/example_mixed_timestamps.csv', header=True)"
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Mounting the blob\r\n",
+					"Not everything can use wasbs: directly. Using Scala, we can mount the blob to the local spark file system (which is available\r\n",
+					"on all nodes of the spark cluster)"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "scala"
+					}
+				},
+				"source": [
+					"%%spark\r\n",
+					"mssparkutils.fs.mount( \r\n",
+					"    \"wasbs://suleplayground@suleplayground.blob.core.windows.net\",\r\n",
+					"    \"/mnt\", \r\n",
+					"    Map(\"linkedService\" -> \"sp\")\r\n",
+					")"
+				],
+				"execution_count": 6
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"The files we want are in a directory named `synfs` followed by the current spark job number"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"jobId = mssparkutils.env.getJobId()\r\n",
+					"mount = \"synfs:/\"+ jobId + \"/mnt\"\r\n",
+					"print(\"mount:\", mount)\r\n",
+					"mssparkutils.fs.ls(mount) "
+				],
+				"execution_count": 7
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"To show that the blob is mounted, let's access it via `synfs:`"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"mssparkutils.fs.head(mount + \"/data/job_level_data_with_cluster_ids_sample.csv\",50) "
+				],
+				"execution_count": 8
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## In what directory are we are we executing??\r\n",
+					"It turns out, our spark job is running in some deep directory under hadoop. If we look at the local files, the blob\r\n",
+					"mount point is not here. This will cause us some issues in a few cells..."
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"import os\r\n",
+					"\r\n",
+					"os.listdir(\".\")\r\n",
+					""
+				],
+				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from platform import python_version\r\n",
+					"print(python_version())"
+				],
+				"execution_count": 10
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Loading CMD manifest\r\n",
+					"If we want to use `KB.load_from_manifest` we are going to have problems. It will try to load from the current directory, which,\r\n",
+					"as just mentioned, is some deep, temporary hadoop folder. The files we want are in /synfs, but we cannot reach them, and\r\n",
+					"`load_from_manifest` is coded in such a way that it's essentially impossible to get it to look at the root folder.\r\n",
+					"\r\n",
+					"So let's work arond that and create a local symlink named `synfs`!"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from pathlib import Path\r\n",
+					"p = Path( 'synfs' )\r\n",
+					"if not p.exists():\r\n",
+					"    p.symlink_to('/synfs')\r\n",
+					"    \r\n",
+					"local_mount = \"/\" + mount.replace(\":/\", \"/\")\r\n",
+					"manifest_path = \"local:\" + local_mount + \"/cdm/jobsModel.manifest.cdm.json\"\r\n",
+					"local_mount"
+				],
+				"execution_count": 11
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Now we can load the KB. There are two approaches we can take:\r\n",
+					"\r\n",
+					"1. Load the manifest and parse all of the data, thereby construction the KB. This can then be persisted to disk\r\n",
+					"2. Load a previously persisted KB\r\n",
+					"\r\n",
+					"**However**, option #2 is not working due to a [bug](https://cisl.visualstudio.com/Enya/_workitems/edit/609), so we'll just use option #1 always, even if it's slower.\r\n",
+					"(In this small sample, it's really not slower)."
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"tags": []
+				},
+				"source": [
+					"# Load CDM model -- start with a clean KB\n",
+					"KB = en.KB()\n",
+					"KB.make_default()"
+				],
+				"execution_count": 12
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Note that when we load the manifest, we will get **warnings** about the manifest indicating that there is a pickle file but it cannot find one.\r\n",
+					"We can **safely ignore these warning**. It's true, there is no pickle file, and the code will just go about creating the KB without them."
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Register and save parsers\r\n",
+					"KB.load_from_manifest(manifest_path)\r\n",
+					"# we'd want to do the following instead (aka Option 2), but due to some bugs this will fail to properly reconstruct the KB from the pickle files\r\n",
+					"# KB.load_from_manifest(manifest_path, path_to_kb=local_mount + '/data/enya_kb')\r\n",
+					"sdf = KB.get_data(\"jobsInfo\")\r\n",
+					"\r\n",
+					"message_type = sdf.get_attribute(\"Message\").get_logical_type()\r\n",
+					"workspace_type = sdf.get_attribute(\"WorkspaceName\").get_logical_type()\r\n",
+					"poolname_type = sdf.get_attribute(\"PoolName\").get_logical_type()\r\n",
+					"\r\n",
+					"message_type.add_component(\r\n",
+					"    \"workspace\", workspace_type, str, lambda x: x.split(\".\")[2]\r\n",
+					"    )\r\n",
+					"message_type.add_component(\r\n",
+					"    \"poolname\", poolname_type, str, lambda x: x.split(\".\")[3]\r\n",
+					"    )\r\n",
+					"#KB.persist(local_mount + \"/data/enya_kb\")"
+				],
+				"execution_count": 13
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#KB.persist(\"./data_debug/enya_kb\")\r\n",
+					"KB.write_to_manifest(\"./data_debug/enya_kb/jobsModel.manifest.cdm.json\")"
+				],
+				"execution_count": 14
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"KB.clean()\r\n",
+					"KB.load_from_manifest(\"local:/data_debug/enya_kb/jobsModel.manifest.cdm.json\")"
+				],
+				"execution_count": 15
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"print(KB.get_entities())"
+				],
+				"execution_count": 16
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"print(KB.get_entities())\r\n",
+					"KB.show_relationships()\r\n",
+					"#KB.clean()"
+				],
+				"execution_count": 17
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"**And, with that, we've created an Enya KB in Synapse and now have access to Semantic DataFrames!!!**\r\n",
+					"\r\n",
+					"Let's start to use it!! Let's create a SDF for the jobsInfo table."
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Generate semantic dataframe for job entity\n",
+					"sdf = KB.get_data(\"jobsInfo\")"
+				],
+				"execution_count": 18
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"sdf.standardize()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"tags": []
+				},
+				"source": [
+					"sdf.sample(5)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Message column is a string containing multiple information (workspace, poolname, etc)\n",
+					"sdf[\"Message\"].sample(5)\n",
+					""
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Group by workspace field\n",
+					"sdf.groupby(\"Message.workspace\").count()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"#Group by on poolname field\n",
+					"sdf.groupby(\"Message.poolname\").count()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"# Without Enya"
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"#df = pd.read_csv(\"data/job_level_data_sample.csv\")\n",
+					"df = pd.read_csv(local_mount + \"/data/job_level_data_sample.csv\")\n",
+					"df[\"Message\"].sample(5)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"def get_workspace(message):\n",
+					"    components = message.split(\".\")\n",
+					"    workspace = components[2]\n",
+					"    return workspace\n",
+					"\n",
+					"df[\"workspace\"] = df[\"Message\"].map(get_workspace)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"df.groupby(\"workspace\").count()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"def get_poolname(message):\n",
+					"    components = message.split(\".\")\n",
+					"    workspace = components[3]\n",
+					"    return workspace\n",
+					"\n",
+					"df[\"poolname\"] = df[\"Message\"].map(get_workspace)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"df.groupby(\"poolname\").count()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"source": [
+					"## Registering components\n",
+					""
+				]
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from enya.model import LogicalType\n",
+					"\n",
+					"message_type = LogicalType(\"message_type_lt\", str)\n",
+					"\n",
+					"workspace_type = LogicalType(\"workspace_lt\", str)\n",
+					"poolname_type = LogicalType(\"poolname_lt\", str)\n",
+					"cluster_id_type = LogicalType(\"cluster_id_lt\", str)\n",
+					"\n",
+					"message_type.add_component(\n",
+					"    \"workspace\", workspace_type, str, lambda x: x.split(\".\")[2]\n",
+					")\n",
+					"message_type.add_component(\n",
+					"    \"poolname\", poolname_type, str, lambda x: x.split(\".\")[3]\n",
+					")\n",
+					"message_type.add_component(\n",
+					"    \"cluster_id\", cluster_id_type, str, lambda x: x.split(\".\")[4]\n",
+					")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Showdown this spark session so you are not wasting resources"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"spark.sparkContext.stop()\r\n",
+					"spark.stop()"
+				],
+				"execution_count": null
+			}
+		]
+	}
+}
