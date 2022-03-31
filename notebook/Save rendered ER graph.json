@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ca7411b0-c1cf-49ab-8e2f-1cc3e981c6f2"
+				"spark.autotune.trackingId": "752265a9-4145-447f-a1bd-a8ed60ada553"
 			}
 		},
 		"metadata": {
@@ -71,7 +71,7 @@
 					"logging.getLogger('cdm-python').setLevel(logging.ERROR)\n",
 					""
 				],
-				"execution_count": 13
+				"execution_count": 14
 			},
 			{
 				"cell_type": "markdown",
@@ -123,7 +123,7 @@
 					"spark.conf.set('fs.azure.sas.%s.%s.blob.core.windows.net' % (blob_container_name, blob_account_name), blob_sas_token)\r\n",
 					"print('Remote blob path: ' + wasb_path)"
 				],
-				"execution_count": 10
+				"execution_count": 15
 			},
 			{
 				"cell_type": "markdown",
@@ -155,7 +155,7 @@
 					"from notebookutils import mssparkutils\r\n",
 					"mssparkutils.fs.help()"
 				],
-				"execution_count": 11
+				"execution_count": 16
 			},
 			{
 				"cell_type": "markdown",
@@ -186,7 +186,7 @@
 				"source": [
 					"mssparkutils.fs.ls(wasb_path)"
 				],
-				"execution_count": 12
+				"execution_count": 17
 			},
 			{
 				"cell_type": "markdown",
