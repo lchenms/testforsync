@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "e570258d-2bc7-4abf-a4e2-20789fb842e3"
+				"spark.autotune.trackingId": "4f90ed8c-bb82-473c-bd6d-4d3794e0636c"
 			}
 		},
 		"metadata": {
@@ -519,6 +519,19 @@
 					"manifest_path_write = \"local:\" + local_mount + \"/tests/jobsModel.manifest.cdm.json\""
 				],
 				"execution_count": 17
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Note: In the code below we hit some errors. I believe this is because of that the write_to_manifest function does not support local now."
+				]
 			},
 			{
 				"cell_type": "code",
