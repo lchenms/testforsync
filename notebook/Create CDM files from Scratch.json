@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f64b28b4-e554-4c42-9a25-61c213184fe8"
+				"spark.autotune.trackingId": "8de0ec9c-5ee7-4f56-bc7c-bac656db0721"
 			}
 		},
 		"metadata": {
@@ -71,7 +71,7 @@
 					"for f in glob(pattern):\r\n",
 					"    print(f)"
 				],
-				"execution_count": null
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -89,7 +89,7 @@
 				"source": [
 					"# import sklearn.experimental"
 				],
-				"execution_count": 3
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -126,7 +126,7 @@
 					"    # the entities are returned, but also automatically written to the KB\r\n",
 					"    stub_from_frame(entity_name=entity_name, filename=f)"
 				],
-				"execution_count": 4
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
@@ -144,7 +144,7 @@
 				"source": [
 					"kb.get_entities()"
 				],
-				"execution_count": 5
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -163,7 +163,7 @@
 					"sdf = kb.get_data(\"patients\")\r\n",
 					"sdf.head()"
 				],
-				"execution_count": 6
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -181,7 +181,7 @@
 				"source": [
 					"kb.show_relationships()"
 				],
-				"execution_count": 7
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
@@ -201,7 +201,7 @@
 					"suggested_relationships = find_relationships(kb)\r\n",
 					"suggested_relationships"
 				],
-				"execution_count": 8
+				"execution_count": 15
 			},
 			{
 				"cell_type": "code",
