@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "331e0d43-07c0-42a8-8109-e83a4a3e4ad7"
+				"spark.autotune.trackingId": "f2fd6b60-9a6e-4576-8f48-c593753930a5"
 			}
 		},
 		"metadata": {
@@ -75,7 +75,7 @@
 					"kb.make_default()\n",
 					"from enya.model import  Entity, Relationship, Attribute"
 				],
-				"execution_count": 1
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -107,6 +107,50 @@
 					"star_graph.render(\"star\", format=\"png\")"
 				],
 				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sale_df = kb.get_data(\"Sale\")\r\n",
+					"customer_df = kb.get_data(\"Customer\")"
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Pandas DF\r\n",
+					"merge_path_withdf = sale_df.merge(customer_df, on=\"customer_id\")\r\n",
+					"\r\n",
+					"# Semantic DF 1\r\n",
+					"# merge_path_withdf = sale_sdf.merge(customer_sdf)\r\n",
+					"\r\n",
+					"# Semantic DF 2\r\n",
+					"# merge_path_withdf = sale_sdf.merge(\"Customer\")"
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
