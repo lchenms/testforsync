@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f2fd6b60-9a6e-4576-8f48-c593753930a5"
+				"spark.autotune.trackingId": "e2dd206f-81b3-468e-b903-aa0ae8d8e8ff"
 			}
 		},
 		"metadata": {
@@ -75,7 +75,7 @@
 					"kb.make_default()\n",
 					"from enya.model import  Entity, Relationship, Attribute"
 				],
-				"execution_count": null
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -91,7 +91,7 @@
 					"Relationship(from_entity=\"Sale\", from_attribute=\"CustomerId\", to_entity=\"Customer\", to_attribute=\"CustomerId\")\n",
 					"Relationship(from_entity=\"Customer\", from_attribute=\"CustomerAddressId\", to_entity=\"CustomerAddress\", to_attribute=\"CustomerAddressId\")"
 				],
-				"execution_count": 2
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -150,7 +150,7 @@
 					"# Semantic DF 2\r\n",
 					"# merge_path_withdf = sale_sdf.merge(\"Customer\")"
 				],
-				"execution_count": null
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
