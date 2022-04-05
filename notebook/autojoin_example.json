@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "3fe8c3b3-c5b3-4f0e-aeb2-29958ecb2db7"
+				"spark.autotune.trackingId": "1ab3cbd5-9ec5-4705-bcea-82b7186f76e2"
 			}
 		},
 		"metadata": {
@@ -75,14 +75,32 @@
 					"kb.make_default()\n",
 					"from enya.model import  Entity, Relationship, Attribute"
 				],
-				"execution_count": 17
+				"execution_count": 116
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from enya.model import Entity"
+				],
+				"execution_count": 117
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"kb.clean()\n",
-					"customer = Entity(\"Customer\", attributes=[Attribute(\"CustomerId\", int), Attribute(\"CustomerName\", str), Attribute(\"CustomerAddressId\", int)])\n",
-					"sale = Entity(\"Sale\", attributes=[Attribute(\"CustomerId\", int), Attribute(\"ProductId\", int), Attribute(\"StoreId\", int)])\n",
+					"Entity(\"Customer\", attributes=[Attribute(\"CustomerId\", int), Attribute(\"CustomerName\", str), Attribute(\"CustomerAddressId\", int)])\n",
+					"Entity(\"Sale\", attributes=[Attribute(\"CustomerId\", int), Attribute(\"ProductId\", int), Attribute(\"StoreId\", int)])\n",
 					"Entity(\"Product\", attributes=[Attribute(\"ProductId\", int), Attribute(\"Price\", float)])\n",
 					"Entity(\"CustomerAddress\", attributes=[Attribute(\"CustomerAddressId\", int), Attribute(\"StreetAddress\", float), Attribute(\"ZipCode\", int)])\n",
 					"Entity(\"Store\", attributes=[Attribute(\"StoreId\", int), Attribute(\"StoreAddress\", str)])\n",
@@ -91,7 +109,7 @@
 					"Relationship(from_entity=\"Sale\", from_attribute=\"CustomerId\", to_entity=\"Customer\", to_attribute=\"CustomerId\")\n",
 					"Relationship(from_entity=\"Customer\", from_attribute=\"CustomerAddressId\", to_entity=\"CustomerAddress\", to_attribute=\"CustomerAddressId\")"
 				],
-				"execution_count": 18
+				"execution_count": 118
 			},
 			{
 				"cell_type": "code",
@@ -99,14 +117,14 @@
 					"star_graph = kb.show_relationships()\n",
 					"star_graph"
 				],
-				"execution_count": 19
+				"execution_count": 119
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"star_graph.render(\"star\", format=\"png\")"
 				],
-				"execution_count": 20
+				"execution_count": 103
 			},
 			{
 				"cell_type": "code",
@@ -122,13 +140,9 @@
 					}
 				},
 				"source": [
-					"# Add grounding for sale\r\n",
-					"kb.add_grounding(GroundingFunc(lambda: df, attribute_to_column_mapping={shipment_to_address: \"ShipmentToAddress\", order_id: \"OrderId\", product_id: \"ProductID\"}), sale)\r\n",
-					"\r\n",
-					"# Add grounding for customer\r\n",
-					"kb.add_grounding(GroundingFunc(lambda: df, attribute_to_column_mapping={shipment_to_address: \"ShipmentToAddress\", order_id: \"OrderId\", product_id: \"ProductID\"}), customer)"
+					"sale"
 				],
-				"execution_count": null
+				"execution_count": 104
 			},
 			{
 				"cell_type": "code",
@@ -144,43 +158,28 @@
 					}
 				},
 				"source": [
-					"# Create Sematic DF\r\n",
-					"sale_df = kb.get_data(\"Sale\")\r\n",
-					"customer_df = kb.get_data(\"Customer\")"
-				],
-				"execution_count": null
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"# Pandas DF\r\n",
-					"merge_path_withdf = sale_df.merge(customer_df, on=\"customer_id\")\r\n",
+					"# Assuming that there are sale_df and customer_df. And we want to leverage this fact when doing the merging\r\n",
 					"\r\n",
-					"# Semantic DF 1\r\n",
-					"# merge_path_withdf = sale_sdf.merge(customer_sdf)\r\n",
+					"# #First we need to tie the entities to the dataframes\r\n",
+					"# from enya.model.grounding import GroundingFunc\r\n",
+					"#kb.add_grounding(sale_df, \"Sale\")\r\n",
+					"#kb.add_grounding(customer_df, \"Customer\")\r\n",
 					"\r\n",
-					"# Semantic DF 2\r\n",
-					"# merge_path_withdf = sale_sdf.merge(\"Customer\")"
+					"# #Then we merge based on common column\r\n",
+					"# sale_df.merge(customer_df, on=\"customer_id\")\r\n",
+					"\r\n",
+					"# #If there's already relationship established between the two entities through the common column\r\n",
+					"# sale_sdf.merge(customer_sdf)\r\n",
+					"# Or: sale_sdf.merge(\"Customer\")"
 				],
-				"execution_count": null
+				"execution_count": 80
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"merge_path = kb.find_merge_paths([\"Sale\", \"CustomerAddress\"])"
 				],
-				"execution_count": null
+				"execution_count": 105
 			},
 			{
 				"cell_type": "code",
@@ -188,14 +187,14 @@
 					"merge_path_graph = kb.show_relationships(highlight_paths=merge_path)\n",
 					"merge_path_graph"
 				],
-				"execution_count": null
+				"execution_count": 106
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"merge_path_graph.render(\"merge_path_star\", format=\"png\")"
 				],
-				"execution_count": 7
+				"execution_count": 107
 			},
 			{
 				"cell_type": "code",
@@ -218,7 +217,7 @@
 					"Relationship(from_entity=\"ProductAvailableInRegion\", from_attribute=\"RegionId\", to_entity=\"Region\", to_attribute=\"RegionId\")\n",
 					"Relationship(from_entity=\"ProductAvailableInRegion\", from_attribute=\"ProductId\", to_entity=\"Product\", to_attribute=\"ProductId\")"
 				],
-				"execution_count": 8
+				"execution_count": 120
 			},
 			{
 				"cell_type": "code",
@@ -227,14 +226,14 @@
 					"region_graph.render(\"region_graph\", format=\"png\")\n",
 					"region_graph"
 				],
-				"execution_count": 9
+				"execution_count": 121
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"two_paths = kb.find_merge_paths([\"Store\", \"Product\"])"
 				],
-				"execution_count": 10
+				"execution_count": 86
 			},
 			{
 				"cell_type": "code",
@@ -243,14 +242,14 @@
 					"two_paths_graph.render(\"two_paths_graph\", format=\"png\")\n",
 					"two_paths_graph"
 				],
-				"execution_count": 11
+				"execution_count": 87
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"kb.find_merge_paths([\"Store\", \"Product\"], shortest_path=True)"
 				],
-				"execution_count": 12
+				"execution_count": 88
 			},
 			{
 				"cell_type": "markdown",
@@ -264,7 +263,7 @@
 					"merge_paths = kb.find_merge_paths([\"Sale\", \"CustomerAddress\", \"Store\"])\n",
 					""
 				],
-				"execution_count": 13
+				"execution_count": 122
 			},
 			{
 				"cell_type": "code",
@@ -273,21 +272,39 @@
 					"multiple_entity_paths_graph.render(\"multiple_entities_graph\", format=\"png\")\n",
 					"multiple_entity_paths_graph"
 				],
-				"execution_count": 14
+				"execution_count": 123
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"kb.find_merge_paths([\"Sale\", \"CustomerAddress\", \"Store\"])"
 				],
-				"execution_count": 15
+				"execution_count": 124
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"kb.find_merge_paths([\"Sale\", \"CustomerAddress\", \"Store\"], shortest_path=True)"
 				],
-				"execution_count": 16
+				"execution_count": 126
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"kb.find_merge_paths([\"Sale\", \"CustomerAddress\", \"Store\"], pk_only=True)"
+				],
+				"execution_count": 128
 			},
 			{
 				"cell_type": "code",
@@ -303,7 +320,7 @@
 					"Relationship(from_entity=\"Shipment\", from_attribute=\"ProductId\", to_entity=\"Product\", to_attribute=\"ProductId\")\n",
 					"Relationship(from_entity=\"Shipment\", from_attribute=\"CustomerId\", to_entity=\"Customer\", to_attribute=\"CustomerId\")"
 				],
-				"execution_count": 17
+				"execution_count": 129
 			},
 			{
 				"cell_type": "code",
@@ -312,7 +329,7 @@
 					"symmetric_graph.render(\"symmetric_graph\", format=\"png\")\n",
 					"symmetric_graph"
 				],
-				"execution_count": 18
+				"execution_count": 130
 			},
 			{
 				"cell_type": "code",
@@ -332,7 +349,7 @@
 					"\n",
 					"kb.show_relationships()"
 				],
-				"execution_count": 19
+				"execution_count": 95
 			},
 			{
 				"cell_type": "code",
@@ -341,14 +358,7 @@
 					"gender_short_graph.render(\"gender_short_graph\", format=\"png\")\n",
 					"gender_short_graph"
 				],
-				"execution_count": 20
-			},
-			{
-				"cell_type": "code",
-				"source": [
-					""
-				],
-				"execution_count": null
+				"execution_count": 96
 			}
 		]
 	}
