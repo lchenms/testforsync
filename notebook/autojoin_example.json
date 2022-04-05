@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "6a7c44d0-8553-4f70-8852-7888e10eb094"
+				"spark.autotune.trackingId": "3fe8c3b3-c5b3-4f0e-aeb2-29958ecb2db7"
 			}
 		},
 		"metadata": {
@@ -75,14 +75,14 @@
 					"kb.make_default()\n",
 					"from enya.model import  Entity, Relationship, Attribute"
 				],
-				"execution_count": 7
+				"execution_count": 17
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"kb.clean()\n",
-					"Entity(\"Customer\", attributes=[Attribute(\"CustomerId\", int), Attribute(\"CustomerName\", str), Attribute(\"CustomerAddressId\", int)])\n",
-					"Entity(\"Sale\", attributes=[Attribute(\"CustomerId\", int), Attribute(\"ProductId\", int), Attribute(\"StoreId\", int)])\n",
+					"customer = Entity(\"Customer\", attributes=[Attribute(\"CustomerId\", int), Attribute(\"CustomerName\", str), Attribute(\"CustomerAddressId\", int)])\n",
+					"sale = Entity(\"Sale\", attributes=[Attribute(\"CustomerId\", int), Attribute(\"ProductId\", int), Attribute(\"StoreId\", int)])\n",
 					"Entity(\"Product\", attributes=[Attribute(\"ProductId\", int), Attribute(\"Price\", float)])\n",
 					"Entity(\"CustomerAddress\", attributes=[Attribute(\"CustomerAddressId\", int), Attribute(\"StreetAddress\", float), Attribute(\"ZipCode\", int)])\n",
 					"Entity(\"Store\", attributes=[Attribute(\"StoreId\", int), Attribute(\"StoreAddress\", str)])\n",
@@ -91,7 +91,7 @@
 					"Relationship(from_entity=\"Sale\", from_attribute=\"CustomerId\", to_entity=\"Customer\", to_attribute=\"CustomerId\")\n",
 					"Relationship(from_entity=\"Customer\", from_attribute=\"CustomerAddressId\", to_entity=\"CustomerAddress\", to_attribute=\"CustomerAddressId\")"
 				],
-				"execution_count": 8
+				"execution_count": 18
 			},
 			{
 				"cell_type": "code",
@@ -99,14 +99,14 @@
 					"star_graph = kb.show_relationships()\n",
 					"star_graph"
 				],
-				"execution_count": 10
+				"execution_count": 19
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"star_graph.render(\"star\", format=\"png\")"
 				],
-				"execution_count": 11
+				"execution_count": 20
 			},
 			{
 				"cell_type": "code",
@@ -122,10 +122,33 @@
 					}
 				},
 				"source": [
+					"# Add grounding for sale\r\n",
+					"kb.add_grounding(GroundingFunc(lambda: df, attribute_to_column_mapping={shipment_to_address: \"ShipmentToAddress\", order_id: \"OrderId\", product_id: \"ProductID\"}), sale)\r\n",
+					"\r\n",
+					"# Add grounding for customer\r\n",
+					"kb.add_grounding(GroundingFunc(lambda: df, attribute_to_column_mapping={shipment_to_address: \"ShipmentToAddress\", order_id: \"OrderId\", product_id: \"ProductID\"}), customer)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Create Sematic DF\r\n",
 					"sale_df = kb.get_data(\"Sale\")\r\n",
 					"customer_df = kb.get_data(\"Customer\")"
 				],
-				"execution_count": 12
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -150,14 +173,14 @@
 					"# Semantic DF 2\r\n",
 					"# merge_path_withdf = sale_sdf.merge(\"Customer\")"
 				],
-				"execution_count": 6
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"merge_path = kb.find_merge_paths([\"Sale\", \"CustomerAddress\"])"
 				],
-				"execution_count": 13
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -165,7 +188,7 @@
 					"merge_path_graph = kb.show_relationships(highlight_paths=merge_path)\n",
 					"merge_path_graph"
 				],
-				"execution_count": 14
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
