@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "c47dfcee-0760-43a0-a66f-af4e9c0e8ea1"
+				"spark.autotune.trackingId": "8c5994c4-8b48-4892-80b7-43f487f38b88"
 			}
 		},
 		"metadata": {
@@ -53,7 +53,7 @@
 				"source": [
 					"import pandas as pd"
 				],
-				"execution_count": 15
+				"execution_count": 29
 			},
 			{
 				"cell_type": "code",
@@ -71,7 +71,7 @@
 				"source": [
 					"import fsspec"
 				],
-				"execution_count": 16
+				"execution_count": 30
 			},
 			{
 				"cell_type": "code",
@@ -87,7 +87,7 @@
 					}
 				},
 				"source": [
-					"adls_account_name = 'Primary - lizzycontosolake' #Provide exact ADLS account name\r\n",
+					"adls_account_name = 'lizzycontosolake' #Provide exact ADLS account name\r\n",
 					"sas_key = 'SFqgn3xYmVtGWAEckJ9ak/DhRcczYNl4T7GZwqDE6duvUYXHcaMvzyrXcKXWuiW3c2J1UcmzFMPj+AStm4CrkQ=='\r\n",
 					"\r\n",
 					"fsspec_handle = fsspec.open('abfs:///tests/resources/simple-cdm-model/order1.csv', account_name = adls_account_name, sas_token=sas_key)\r\n",
@@ -95,7 +95,7 @@
 					"with fsspec_handle.open() as f:\r\n",
 					"    df = pd.read_csv(f)"
 				],
-				"execution_count": 22
+				"execution_count": 31
 			},
 			{
 				"cell_type": "code",
@@ -113,7 +113,7 @@
 				"source": [
 					"df"
 				],
-				"execution_count": null
+				"execution_count": 23
 			},
 			{
 				"cell_type": "markdown",
