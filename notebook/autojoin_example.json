@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "e2dd206f-81b3-468e-b903-aa0ae8d8e8ff"
+				"spark.autotune.trackingId": "6a7c44d0-8553-4f70-8852-7888e10eb094"
 			}
 		},
 		"metadata": {
@@ -75,7 +75,7 @@
 					"kb.make_default()\n",
 					"from enya.model import  Entity, Relationship, Attribute"
 				],
-				"execution_count": 4
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -91,7 +91,7 @@
 					"Relationship(from_entity=\"Sale\", from_attribute=\"CustomerId\", to_entity=\"Customer\", to_attribute=\"CustomerId\")\n",
 					"Relationship(from_entity=\"Customer\", from_attribute=\"CustomerAddressId\", to_entity=\"CustomerAddress\", to_attribute=\"CustomerAddressId\")"
 				],
-				"execution_count": 5
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -99,14 +99,14 @@
 					"star_graph = kb.show_relationships()\n",
 					"star_graph"
 				],
-				"execution_count": 3
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"star_graph.render(\"star\", format=\"png\")"
 				],
-				"execution_count": 4
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
@@ -125,7 +125,7 @@
 					"sale_df = kb.get_data(\"Sale\")\r\n",
 					"customer_df = kb.get_data(\"Customer\")"
 				],
-				"execution_count": 3
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -157,7 +157,7 @@
 				"source": [
 					"merge_path = kb.find_merge_paths([\"Sale\", \"CustomerAddress\"])"
 				],
-				"execution_count": 5
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -165,7 +165,7 @@
 					"merge_path_graph = kb.show_relationships(highlight_paths=merge_path)\n",
 					"merge_path_graph"
 				],
-				"execution_count": 6
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
