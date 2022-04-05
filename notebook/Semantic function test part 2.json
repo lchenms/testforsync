@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "97140a91-7b1a-4643-b1f9-a5f7cab989cd"
+				"spark.autotune.trackingId": "c47dfcee-0760-43a0-a66f-af4e9c0e8ea1"
 			}
 		},
 		"metadata": {
@@ -53,7 +53,67 @@
 				"source": [
 					"import pandas as pd"
 				],
-				"execution_count": 5
+				"execution_count": 15
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"import fsspec"
+				],
+				"execution_count": 16
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"adls_account_name = 'Primary - lizzycontosolake' #Provide exact ADLS account name\r\n",
+					"sas_key = 'SFqgn3xYmVtGWAEckJ9ak/DhRcczYNl4T7GZwqDE6duvUYXHcaMvzyrXcKXWuiW3c2J1UcmzFMPj+AStm4CrkQ=='\r\n",
+					"\r\n",
+					"fsspec_handle = fsspec.open('abfs:///tests/resources/simple-cdm-model/order1.csv', account_name = adls_account_name, sas_token=sas_key)\r\n",
+					"\r\n",
+					"with fsspec_handle.open() as f:\r\n",
+					"    df = pd.read_csv(f)"
+				],
+				"execution_count": 22
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"df"
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -130,7 +190,7 @@
 					"\r\n",
 					"#df = pd.read_csv('abfss://lizzyusers@lizzycontosolake.dfs.core.windows.net/tests/resources/simple-cdm-model/order1.csv')"
 				],
-				"execution_count": 9
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
