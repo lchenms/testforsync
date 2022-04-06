@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "490518e1-b80d-4370-9a19-27ae9fd1a03a"
+				"spark.autotune.trackingId": "a439234e-699b-4489-b9d4-a8d6d31bb798"
 			}
 		},
 		"metadata": {
@@ -55,7 +55,7 @@
 					"from enya.kb.kb import create_new_default_KB, _get_KB\r\n",
 					"from enya.model import Attribute, LogicalType, Constraint, Entity, Relationship"
 				],
-				"execution_count": 3
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -75,7 +75,7 @@
 					"set_backend('koalas')\r\n",
 					"print(get_backend())"
 				],
-				"execution_count": null
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -93,7 +93,7 @@
 				"source": [
 					"backend_module = enya.backend.get_backend()"
 				],
-				"execution_count": null
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -112,7 +112,7 @@
 					"kb = enya.KB()\r\n",
 					"kb.make_default()"
 				],
-				"execution_count": null
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -130,7 +130,7 @@
 				"source": [
 					"from enya import SemanticDataFrame"
 				],
-				"execution_count": null
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -161,7 +161,7 @@
 					"sdf = SemanticDataFrame(df, {\r\n",
 					"    cont_at: \"numbers\", categorical_at: \"states\", str_at: \"descr\"})"
 				],
-				"execution_count": null
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -179,7 +179,7 @@
 				"source": [
 					"df"
 				],
-				"execution_count": null
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -197,7 +197,7 @@
 				"source": [
 					"sdf"
 				],
-				"execution_count": null
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -222,7 +222,7 @@
 					"tags = sdf.get_tags()\r\n",
 					"assert (tags == {\"NumbersAttribute\": {'numeric'},\"StatesAttribute\": {'categorical', 'id'}})"
 				],
-				"execution_count": null
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -240,7 +240,7 @@
 				"source": [
 					"sdf.get_tags()"
 				],
-				"execution_count": null
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
@@ -267,7 +267,7 @@
 					"    series = sdf[attribute]\r\n",
 					"    series.value_counts().bar()"
 				],
-				"execution_count": null
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -283,9 +283,9 @@
 					}
 				},
 				"source": [
-					""
+					"simple_countplot(sdf, \"StatesAttribute\")"
 				],
-				"execution_count": null
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -312,62 +312,7 @@
 					"    series = sdf[attribute]\r\n",
 					"    series.value_counts().plot(kind='bar')"
 				],
-				"execution_count": 207
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"# s1 = sdf[\"StatesAttribute\"]\r\n",
-					"# s1"
-				],
-				"execution_count": 208
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"import matplotlib"
-				],
-				"execution_count": 209
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"# s1.value_counts().plot(kind='bar')"
-				],
-				"execution_count": 210
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
@@ -385,7 +330,107 @@
 				"source": [
 					"simple_countplot(sdf, \"StatesAttribute\")"
 				],
-				"execution_count": 211
+				"execution_count": 24
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"s1 = sdf[\"StatesAttribute\"]\r\n",
+					"s1"
+				],
+				"execution_count": 18
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"import matplotlib"
+				],
+				"execution_count": 19
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"s1.value_counts().plot(kind='bar')"
+				],
+				"execution_count": 20
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"def simple_countplot(sdf, attribute):\r\n",
+					"    # if the attribute is a string, get the actual attribute object:\r\n",
+					"    if isinstance(attribute, str):\r\n",
+					"        attribute = sdf.attributes[attribute]\r\n",
+					"    # Check that the attribute is actually categorical\r\n",
+					"    if \"categorical\" not in attribute.get_logical_type().tags:\r\n",
+					"        raise ValueError(f\"Attribute {attribute.name} is not categorical, can't apply simple_countplot.\")\r\n",
+					"    # actually do the plotting\r\n",
+					"    series = sdf[attribute]\r\n",
+					"    return series.value_counts().plot(kind='bar')"
+				],
+				"execution_count": 21
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"simple_countplot(sdf, \"StatesAttribute\")"
+				],
+				"execution_count": 22
 			},
 			{
 				"cell_type": "code",
