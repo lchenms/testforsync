@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "5d5ff7d3-fe73-412a-b642-71ece4f4a946"
+				"spark.autotune.trackingId": "2c487c8f-f34b-4ca1-ae45-77606f42924d"
 			}
 		},
 		"metadata": {
@@ -55,7 +55,7 @@
 					"from enya.kb.kb import create_new_default_KB, _get_KB\r\n",
 					"from enya.model import Attribute, LogicalType, Constraint, Entity, Relationship"
 				],
-				"execution_count": 89
+				"execution_count": 118
 			},
 			{
 				"cell_type": "code",
@@ -75,7 +75,7 @@
 					"set_backend('koalas')\r\n",
 					"print(get_backend())"
 				],
-				"execution_count": 90
+				"execution_count": 119
 			},
 			{
 				"cell_type": "code",
@@ -93,7 +93,7 @@
 				"source": [
 					"backend_module = enya.backend.get_backend()"
 				],
-				"execution_count": 91
+				"execution_count": 120
 			},
 			{
 				"cell_type": "code",
@@ -112,7 +112,7 @@
 					"kb = enya.KB()\r\n",
 					"kb.make_default()"
 				],
-				"execution_count": 92
+				"execution_count": 121
 			},
 			{
 				"cell_type": "code",
