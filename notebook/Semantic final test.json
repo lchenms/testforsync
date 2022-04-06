@@ -1,5 +1,5 @@
 {
-	"name": "Notebook 1",
+	"name": "Semantic final test",
 	"properties": {
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "3ef03016-3c0a-4e9d-b9a9-b0eb99c19596"
+				"spark.autotune.trackingId": "5d5ff7d3-fe73-412a-b642-71ece4f4a946"
 			}
 		},
 		"metadata": {
