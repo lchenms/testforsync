@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "6f730fc6-0bf1-4b77-ac3c-7ee342a7221f"
+				"spark.autotune.trackingId": "490518e1-b80d-4370-9a19-27ae9fd1a03a"
 			}
 		},
 		"metadata": {
@@ -55,7 +55,7 @@
 					"from enya.kb.kb import create_new_default_KB, _get_KB\r\n",
 					"from enya.model import Attribute, LogicalType, Constraint, Entity, Relationship"
 				],
-				"execution_count": 197
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -75,7 +75,7 @@
 					"set_backend('koalas')\r\n",
 					"print(get_backend())"
 				],
-				"execution_count": 198
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -93,7 +93,7 @@
 				"source": [
 					"backend_module = enya.backend.get_backend()"
 				],
-				"execution_count": 199
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -112,7 +112,7 @@
 					"kb = enya.KB()\r\n",
 					"kb.make_default()"
 				],
-				"execution_count": 200
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -130,7 +130,7 @@
 				"source": [
 					"from enya import SemanticDataFrame"
 				],
-				"execution_count": 201
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -161,7 +161,7 @@
 					"sdf = SemanticDataFrame(df, {\r\n",
 					"    cont_at: \"numbers\", categorical_at: \"states\", str_at: \"descr\"})"
 				],
-				"execution_count": 202
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -179,7 +179,7 @@
 				"source": [
 					"df"
 				],
-				"execution_count": 203
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -197,7 +197,7 @@
 				"source": [
 					"sdf"
 				],
-				"execution_count": 204
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -222,7 +222,7 @@
 					"tags = sdf.get_tags()\r\n",
 					"assert (tags == {\"NumbersAttribute\": {'numeric'},\"StatesAttribute\": {'categorical', 'id'}})"
 				],
-				"execution_count": 205
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -240,7 +240,7 @@
 				"source": [
 					"sdf.get_tags()"
 				],
-				"execution_count": 206
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -265,7 +265,52 @@
 					"        raise ValueError(f\"Attribute {attribute.name} is not categorical, can't apply simple_countplot.\")\r\n",
 					"    # actually do the plotting\r\n",
 					"    series = sdf[attribute]\r\n",
-					"    return series.value_counts().plot(kind='bar')"
+					"    series.value_counts().bar()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"def simple_countplot(sdf, attribute):\r\n",
+					"    # if the attribute is a string, get the actual attribute object:\r\n",
+					"    if isinstance(attribute, str):\r\n",
+					"        attribute = sdf.attributes[attribute]\r\n",
+					"    # Check that the attribute is actually categorical\r\n",
+					"    if \"categorical\" not in attribute.get_logical_type().tags:\r\n",
+					"        raise ValueError(f\"Attribute {attribute.name} is not categorical, can't apply simple_countplot.\")\r\n",
+					"    # actually do the plotting\r\n",
+					"    series = sdf[attribute]\r\n",
+					"    series.value_counts().plot(kind='bar')"
 				],
 				"execution_count": 207
 			},
@@ -520,7 +565,7 @@
 					"countplot_sf(sdf)\r\n",
 					"# runs simple_countplot if there is a categorical attribute, errors otherwise"
 				],
-				"execution_count": 229
+				"execution_count": 237
 			},
 			{
 				"cell_type": "code",
@@ -538,7 +583,7 @@
 				"source": [
 					"kb.add(countplot_sf)"
 				],
-				"execution_count": 230
+				"execution_count": 238
 			},
 			{
 				"cell_type": "code",
@@ -556,7 +601,7 @@
 				"source": [
 					"print(dir(sdf.plot))"
 				],
-				"execution_count": 231
+				"execution_count": 239
 			},
 			{
 				"cell_type": "code",
@@ -613,9 +658,9 @@
 					}
 				},
 				"source": [
-					"simple_countplot_suggestions(\"countplot_sf\", sdf)"
+					"simple_countplot_suggestions(\"countplot\", sdf)"
 				],
-				"execution_count": 235
+				"execution_count": 242
 			}
 		]
 	}

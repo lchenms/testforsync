@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "339cdc20-1971-4437-9393-2807d32a3c82"
+				"spark.autotune.trackingId": "248e9077-02db-427f-8f61-7fbae3e70430"
 			}
 		},
 		"metadata": {
@@ -53,7 +53,7 @@
 				"source": [
 					"import pandas as pd"
 				],
-				"execution_count": 6
+				"execution_count": 1
 			},
 			{
 				"cell_type": "markdown",
@@ -128,7 +128,7 @@
 				"source": [
 					"df = pd.read_csv('abfss://testingpandas@pandasreading.dfs.core.windows.net/tests/resources/simple-cdm-model/order1.csv')"
 				],
-				"execution_count": 8
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
