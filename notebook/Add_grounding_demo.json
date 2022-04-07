@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "b6bffc8f-a3ce-4959-afcb-8be7d922f9ea"
+				"spark.autotune.trackingId": "34e741eb-be5d-4643-9189-209a1ff5e853"
 			}
 		},
 		"metadata": {
@@ -233,7 +233,7 @@
 					"root_path_write = \"write_results\"\r\n",
 					"adls_adapter_write = ADLSAdapter(hostname=adls_endpoint, root=root_path_write, token_provider=DeviceCodeCredential(tenant_id=TENANT_ID))"
 				],
-				"execution_count": 16
+				"execution_count": 22
 			},
 			{
 				"cell_type": "code",
@@ -251,7 +251,7 @@
 				"source": [
 					"KB.write_to_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter_write})"
 				],
-				"execution_count": null
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
@@ -270,7 +270,7 @@
 					"KB.clean()\r\n",
 					"KB.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter_write})"
 				],
-				"execution_count": null
+				"execution_count": 24
 			},
 			{
 				"cell_type": "code",
@@ -288,7 +288,7 @@
 				"source": [
 					"sdf_write = KB.get_data(\"jobsInfo\")"
 				],
-				"execution_count": 12
+				"execution_count": 25
 			},
 			{
 				"cell_type": "code",
@@ -306,7 +306,7 @@
 				"source": [
 					"sdf_write.standardize()"
 				],
-				"execution_count": 13
+				"execution_count": 26
 			},
 			{
 				"cell_type": "code",
@@ -324,7 +324,7 @@
 				"source": [
 					"sdf_write.sample(frac = .5)"
 				],
-				"execution_count": null
+				"execution_count": 27
 			}
 		]
 	}
