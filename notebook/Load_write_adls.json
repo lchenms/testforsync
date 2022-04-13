@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "74baf84a-531b-4be8-832f-b77caa00b111"
+				"spark.autotune.trackingId": "381a71e7-5953-4c36-9dec-8032a790c955"
 			}
 		},
 		"metadata": {
@@ -69,7 +69,7 @@
 					"import datetime as dt\r\n",
 					"import enya as en"
 				],
-				"execution_count": 34
+				"execution_count": 46
 			},
 			{
 				"cell_type": "code",
@@ -101,7 +101,7 @@
 					"cdm_corpus = objectmodel.CdmCorpusDefinition()\r\n",
 					"adls_adapter = ADLSAdapter(hostname=adls_endpoint, root=root_path, token_provider=DeviceCodeCredential(tenant_id=TENANT_ID))"
 				],
-				"execution_count": 35
+				"execution_count": 42
 			},
 			{
 				"cell_type": "code",
@@ -118,11 +118,11 @@
 				},
 				"source": [
 					"# Load CDM model\n",
-					"KB = en.KB()\n",
+					"kb = en.KB()\n",
 					"en.backend.set_backend(\"koalas\")\n",
-					"KB.make_default()"
+					"kb.make_default()"
 				],
-				"execution_count": 36
+				"execution_count": 43
 			},
 			{
 				"cell_type": "code",
@@ -138,9 +138,9 @@
 					}
 				},
 				"source": [
-					"KB.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter})"
+					"kb.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter})"
 				],
-				"execution_count": 37
+				"execution_count": 45
 			},
 			{
 				"cell_type": "code",
@@ -157,7 +157,7 @@
 				},
 				"source": [
 					"# Generate semantic dataframe for job entity\n",
-					"sdf = KB.get_data(\"jobsInfo\")"
+					"sdf = kb.get_data(\"jobsInfo\")"
 				],
 				"execution_count": 38
 			},
