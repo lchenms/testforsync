@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "1ab3cbd5-9ec5-4705-bcea-82b7186f76e2"
+				"spark.autotune.trackingId": "12bda25b-6377-4fc0-bc2f-041580ca00d0"
 			}
 		},
 		"metadata": {
@@ -65,35 +65,18 @@
 			{
 				"cell_type": "code",
 				"source": [
+					"import enya\n",
 					"from enya import KB\n",
 					"kb = KB()\n",
 					"\n",
 					"from enya.backend import set_backend, get_backend\n",
-					"set_backend('koalas')\n",
+					"set_backend('pandas')\n",
 					"print(get_backend())\n",
 					"\n",
 					"kb.make_default()\n",
-					"from enya.model import  Entity, Relationship, Attribute"
+					"from enya.model import Entity, Relationship, Attribute"
 				],
-				"execution_count": 116
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"from enya.model import Entity"
-				],
-				"execution_count": 117
+				"execution_count": 27
 			},
 			{
 				"cell_type": "code",
@@ -109,7 +92,7 @@
 					"Relationship(from_entity=\"Sale\", from_attribute=\"CustomerId\", to_entity=\"Customer\", to_attribute=\"CustomerId\")\n",
 					"Relationship(from_entity=\"Customer\", from_attribute=\"CustomerAddressId\", to_entity=\"CustomerAddress\", to_attribute=\"CustomerAddressId\")"
 				],
-				"execution_count": 118
+				"execution_count": 28
 			},
 			{
 				"cell_type": "code",
@@ -117,14 +100,14 @@
 					"star_graph = kb.show_relationships()\n",
 					"star_graph"
 				],
-				"execution_count": 119
+				"execution_count": 29
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"star_graph.render(\"star\", format=\"png\")"
 				],
-				"execution_count": 103
+				"execution_count": 30
 			},
 			{
 				"cell_type": "code",
@@ -140,9 +123,9 @@
 					}
 				},
 				"source": [
-					"sale"
+					"sale = kb.get_entity(\"Sale\")"
 				],
-				"execution_count": 104
+				"execution_count": 31
 			},
 			{
 				"cell_type": "code",
@@ -179,7 +162,7 @@
 				"source": [
 					"merge_path = kb.find_merge_paths([\"Sale\", \"CustomerAddress\"])"
 				],
-				"execution_count": 105
+				"execution_count": 32
 			},
 			{
 				"cell_type": "code",
@@ -187,7 +170,7 @@
 					"merge_path_graph = kb.show_relationships(highlight_paths=merge_path)\n",
 					"merge_path_graph"
 				],
-				"execution_count": 106
+				"execution_count": 33
 			},
 			{
 				"cell_type": "code",

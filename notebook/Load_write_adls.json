@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "5e2d20ce-74b7-4262-a950-b35e536f487a"
+				"spark.autotune.trackingId": "d6acbca5-7dcc-46cb-84ff-192968a474a1"
 			}
 		},
 		"metadata": {
@@ -101,7 +101,7 @@
 					"cdm_corpus = objectmodel.CdmCorpusDefinition()\r\n",
 					"adls_adapter = ADLSAdapter(hostname=adls_endpoint, root=root_path, token_provider=DeviceCodeCredential(tenant_id=TENANT_ID))"
 				],
-				"execution_count": 42
+				"execution_count": 49
 			},
 			{
 				"cell_type": "code",
@@ -118,11 +118,11 @@
 				},
 				"source": [
 					"# Load CDM model\n",
-					"kb = en.KB()\n",
+					"KB = en.KB()\n",
 					"en.backend.set_backend(\"koalas\")\n",
 					"kb.make_default()"
 				],
-				"execution_count": 2
+				"execution_count": 50
 			},
 			{
 				"cell_type": "code",
@@ -138,9 +138,9 @@
 					}
 				},
 				"source": [
-					"kb.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter})"
+					"KB.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter})"
 				],
-				"execution_count": 45
+				"execution_count": 51
 			},
 			{
 				"cell_type": "code",
@@ -157,9 +157,9 @@
 				},
 				"source": [
 					"# Generate semantic dataframe for job entity\n",
-					"sdf = kb.get_data(\"jobsInfo\")"
+					"sdf = KB.get_data(\"jobsInfo\")"
 				],
-				"execution_count": 38
+				"execution_count": 52
 			},
 			{
 				"cell_type": "code",
@@ -175,9 +175,9 @@
 					}
 				},
 				"source": [
-					"sdf.standardize()"
+					"sdf"
 				],
-				"execution_count": 18
+				"execution_count": 54
 			},
 			{
 				"cell_type": "code",
@@ -193,9 +193,27 @@
 					}
 				},
 				"source": [
-					"sdf.sample(frac = .5)"
+					"KB.get_entities()"
 				],
-				"execution_count": 19
+				"execution_count": 53
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sdf.sample(frac=.5)"
+				],
+				"execution_count": 57
 			},
 			{
 				"cell_type": "code",
@@ -214,7 +232,7 @@
 					"# Message column is a string containing multiple information (workspace, poolname, etc)\n",
 					"sdf[\"Message\"].sample(frac = .5)"
 				],
-				"execution_count": 20
+				"execution_count": 17
 			},
 			{
 				"cell_type": "code",
@@ -233,7 +251,7 @@
 					"root_path_write = \"write_results\"\r\n",
 					"adls_adapter_write = ADLSAdapter(hostname=adls_endpoint, root=root_path_write, token_provider=DeviceCodeCredential(tenant_id=TENANT_ID))"
 				],
-				"execution_count": 21
+				"execution_count": 34
 			},
 			{
 				"cell_type": "code",
@@ -251,7 +269,7 @@
 				"source": [
 					"KB.write_to_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter_write})"
 				],
-				"execution_count": 22
+				"execution_count": 38
 			},
 			{
 				"cell_type": "code",
@@ -267,9 +285,10 @@
 					}
 				},
 				"source": [
+					"KB.clean()\r\n",
 					"KB.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter_write})"
 				],
-				"execution_count": 43
+				"execution_count": 39
 			},
 			{
 				"cell_type": "code",
@@ -287,25 +306,7 @@
 				"source": [
 					"sdf_write = KB.get_data(\"jobsInfo\")"
 				],
-				"execution_count": 44
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"sdf_write.standardize()"
-				],
-				"execution_count": 46
+				"execution_count": 40
 			},
 			{
 				"cell_type": "code",
@@ -323,7 +324,7 @@
 				"source": [
 					"sdf_write.sample(frac = .5)"
 				],
-				"execution_count": 47
+				"execution_count": 41
 			}
 		]
 	}
