@@ -4,20 +4,20 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "enyatest3",
+			"referenceName": "Spark1",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
-			"driverMemory": "56g",
-			"driverCores": 8,
-			"executorMemory": "56g",
-			"executorCores": 8,
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
 			"numExecutors": 2,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "12bda25b-6377-4fc0-bc2f-041580ca00d0"
+				"spark.autotune.trackingId": "ee6d4e17-e38b-47a0-8d8d-0148cc5c9076"
 			}
 		},
 		"metadata": {
@@ -31,18 +31,18 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/enyatest3",
-				"name": "enyatest3",
+				"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/Spark1",
+				"name": "Spark1",
 				"type": "Spark",
-				"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/enyatest3",
+				"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/Spark1",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
 				"sparkVersion": "3.1",
 				"nodeCount": 10,
-				"cores": 8,
-				"memory": 56,
+				"cores": 4,
+				"memory": 28,
 				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
@@ -76,7 +76,7 @@
 					"kb.make_default()\n",
 					"from enya.model import Entity, Relationship, Attribute"
 				],
-				"execution_count": 27
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -92,7 +92,7 @@
 					"Relationship(from_entity=\"Sale\", from_attribute=\"CustomerId\", to_entity=\"Customer\", to_attribute=\"CustomerId\")\n",
 					"Relationship(from_entity=\"Customer\", from_attribute=\"CustomerAddressId\", to_entity=\"CustomerAddress\", to_attribute=\"CustomerAddressId\")"
 				],
-				"execution_count": 28
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -100,14 +100,14 @@
 					"star_graph = kb.show_relationships()\n",
 					"star_graph"
 				],
-				"execution_count": 29
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"star_graph.render(\"star\", format=\"png\")"
 				],
-				"execution_count": 30
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -125,7 +125,7 @@
 				"source": [
 					"sale = kb.get_entity(\"Sale\")"
 				],
-				"execution_count": 31
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -162,7 +162,7 @@
 				"source": [
 					"merge_path = kb.find_merge_paths([\"Sale\", \"CustomerAddress\"])"
 				],
-				"execution_count": 32
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -170,14 +170,14 @@
 					"merge_path_graph = kb.show_relationships(highlight_paths=merge_path)\n",
 					"merge_path_graph"
 				],
-				"execution_count": 33
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"merge_path_graph.render(\"merge_path_star\", format=\"png\")"
 				],
-				"execution_count": 107
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -200,7 +200,7 @@
 					"Relationship(from_entity=\"ProductAvailableInRegion\", from_attribute=\"RegionId\", to_entity=\"Region\", to_attribute=\"RegionId\")\n",
 					"Relationship(from_entity=\"ProductAvailableInRegion\", from_attribute=\"ProductId\", to_entity=\"Product\", to_attribute=\"ProductId\")"
 				],
-				"execution_count": 120
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",

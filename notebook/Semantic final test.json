@@ -4,20 +4,20 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "enyatest3",
+			"referenceName": "Spark1",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
-			"driverMemory": "56g",
-			"driverCores": 8,
-			"executorMemory": "56g",
-			"executorCores": 8,
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
 			"numExecutors": 2,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "bd54cf76-fed5-47a7-9ff8-a7cef46ca7a1"
+				"spark.autotune.trackingId": "e51c9d76-e89d-4096-a62a-bb79f19ed6b7"
 			}
 		},
 		"metadata": {
@@ -31,18 +31,18 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/enyatest3",
-				"name": "enyatest3",
+				"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/Spark1",
+				"name": "Spark1",
 				"type": "Spark",
-				"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/enyatest3",
+				"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/Spark1",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
 				"sparkVersion": "3.1",
 				"nodeCount": 10,
-				"cores": 8,
-				"memory": 56,
+				"cores": 4,
+				"memory": 28,
 				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
@@ -53,9 +53,9 @@
 				"source": [
 					"import enya\r\n",
 					"from enya.kb.kb import create_new_default_KB, _get_KB\r\n",
-					"from enya.model import Attribute, LogicalType, Constraint, Entity, Relationship"
+					"from enya.model import Attribute, LogicalType, Entity, Relationship"
 				],
-				"execution_count": 1
+				"execution_count": 78
 			},
 			{
 				"cell_type": "code",
@@ -73,9 +73,10 @@
 				"source": [
 					"from enya.backend import set_backend, get_backend\r\n",
 					"set_backend('pandas')\r\n",
+					"# set_backend('koalas')\r\n",
 					"print(get_backend())"
 				],
-				"execution_count": 2
+				"execution_count": 79
 			},
 			{
 				"cell_type": "code",
@@ -93,7 +94,7 @@
 				"source": [
 					"backend_module = enya.backend.get_backend()"
 				],
-				"execution_count": 3
+				"execution_count": 80
 			},
 			{
 				"cell_type": "code",
@@ -112,7 +113,7 @@
 					"kb = enya.KB()\r\n",
 					"kb.make_default()"
 				],
-				"execution_count": 4
+				"execution_count": 81
 			},
 			{
 				"cell_type": "code",
@@ -130,7 +131,7 @@
 				"source": [
 					"from enya import SemanticDataFrame"
 				],
-				"execution_count": 5
+				"execution_count": 82
 			},
 			{
 				"cell_type": "code",
@@ -163,7 +164,7 @@
 					"sdf = SemanticDataFrame(df, {\r\n",
 					"    cont_at: \"numbers\", categorical_at: \"states\", str_at: \"descr\"})"
 				],
-				"execution_count": 6
+				"execution_count": 83
 			},
 			{
 				"cell_type": "code",
@@ -181,7 +182,7 @@
 				"source": [
 					"df"
 				],
-				"execution_count": 7
+				"execution_count": 50
 			},
 			{
 				"cell_type": "code",
@@ -199,7 +200,7 @@
 				"source": [
 					"sdf"
 				],
-				"execution_count": 8
+				"execution_count": 51
 			},
 			{
 				"cell_type": "code",
@@ -226,7 +227,7 @@
 					"# tags = sdf.get_tags()\r\n",
 					"# assert (tags == {\"NumbersAttribute\": {'numeric'},\"StatesAttribute\": {'categorical', 'id'}})"
 				],
-				"execution_count": 9
+				"execution_count": 84
 			},
 			{
 				"cell_type": "code",
@@ -244,7 +245,7 @@
 				"source": [
 					"sdf.get_tags()"
 				],
-				"execution_count": 10
+				"execution_count": 85
 			},
 			{
 				"cell_type": "code",
@@ -260,18 +261,9 @@
 					}
 				},
 				"source": [
-					"# def simple_countplot(sdf, attribute):\r\n",
-					"#     # if the attribute is a string, get the actual attribute object:\r\n",
-					"#     if isinstance(attribute, str):\r\n",
-					"#         attribute = sdf.attributes[attribute]\r\n",
-					"#     # Check that the attribute is actually categorical\r\n",
-					"#     if \"categorical\" not in attribute.get_logical_type().tags:\r\n",
-					"#         raise ValueError(f\"Attribute {attribute.name} is not categorical, can't apply simple_countplot.\")\r\n",
-					"#     # actually do the plotting\r\n",
-					"#     series = sdf[attribute]\r\n",
-					"#     series.value_counts().bar()"
+					"import matplotlib"
 				],
-				"execution_count": null
+				"execution_count": 112
 			},
 			{
 				"cell_type": "code",
@@ -287,24 +279,7 @@
 					}
 				},
 				"source": [
-					"# simple_countplot(sdf, \"StatesAttribute\")"
-				],
-				"execution_count": null
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
+					"# For pandas\r\n",
 					"def simple_countplot(sdf, attribute):\r\n",
 					"    # if the attribute is a string, get the actual attribute object:\r\n",
 					"    if isinstance(attribute, str):\r\n",
@@ -314,9 +289,39 @@
 					"        raise ValueError(f\"Attribute {attribute.name} is not categorical, can't apply simple_countplot.\")\r\n",
 					"    # actually do the plotting\r\n",
 					"    series = sdf[attribute]\r\n",
-					"    series.value_counts().plot(kind='bar')"
+					"    matplotlib.pyplot.show(series.value_counts().plot(kind='bar'))"
 				],
-				"execution_count": 11
+				"execution_count": 113
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# For koalas\r\n",
+					"def simple_countplot(sdf, attribute):\r\n",
+					"    # if the attribute is a string, get the actual attribute object:\r\n",
+					"    if isinstance(attribute, str):\r\n",
+					"        attribute = sdf.attributes[attribute]\r\n",
+					"    # Check that the attribute is actually categorical\r\n",
+					"    if \"categorical\" not in attribute.get_logical_type().tags:\r\n",
+					"        raise ValueError(f\"Attribute {attribute.name} is not categorical, can't apply simple_countplot.\")\r\n",
+					"    # actually do the plotting\r\n",
+					"    series = sdf[attribute]\r\n",
+					"    return series.value_counts().plot(kind='bar')\r\n",
+					"    # Only using return we'll be able to see the image show up in Synapse\r\n",
+					"    # series.value_counts().plot(kind='bar')"
+				],
+				"execution_count": 117
 			},
 			{
 				"cell_type": "code",
@@ -334,89 +339,7 @@
 				"source": [
 					"simple_countplot(sdf, \"StatesAttribute\")"
 				],
-				"execution_count": 12
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"# s1 = sdf[\"StatesAttribute\"]\r\n",
-					"# s1"
-				],
-				"execution_count": 18
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"# import matplotlib"
-				],
-				"execution_count": 19
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"# s1.value_counts().plot(kind='bar')"
-				],
-				"execution_count": 20
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"# def simple_countplot(sdf, attribute):\r\n",
-					"#     # if the attribute is a string, get the actual attribute object:\r\n",
-					"#     if isinstance(attribute, str):\r\n",
-					"#         attribute = sdf.attributes[attribute]\r\n",
-					"#     # Check that the attribute is actually categorical\r\n",
-					"#     if \"categorical\" not in attribute.get_logical_type().tags:\r\n",
-					"#         raise ValueError(f\"Attribute {attribute.name} is not categorical, can't apply simple_countplot.\")\r\n",
-					"#     # actually do the plotting\r\n",
-					"#     series = sdf[attribute]\r\n",
-					"#     return series.value_counts().plot(kind='bar')"
-				],
-				"execution_count": 82
+				"execution_count": 118
 			},
 			{
 				"cell_type": "code",
@@ -434,43 +357,7 @@
 				"source": [
 					"sdf.attributes[\"StatesAttribute\"].get_logical_type().tags"
 				],
-				"execution_count": 13
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"states.get_logical_type().tags"
-				],
-				"execution_count": 14
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"simple_countplot(sdf, \"StatesAttribute\")"
-				],
-				"execution_count": 15
+				"execution_count": 19
 			},
 			{
 				"cell_type": "code",
@@ -493,7 +380,6 @@
 					"    \r\n",
 					"    return False\r\n",
 					"    \r\n",
-					"    \r\n",
 					"    #for attribute in attributes:\r\n",
 					"    # if the attribute is a string, get the actual attribute object:\r\n",
 					"    # if isinstance(attribute, str):\r\n",
@@ -503,7 +389,7 @@
 					"    #     return False\r\n",
 					"    # return True"
 				],
-				"execution_count": 16
+				"execution_count": 22
 			},
 			{
 				"cell_type": "code",
@@ -521,7 +407,7 @@
 				"source": [
 					"states = sdf.attributes[\"StatesAttribute\"]"
 				],
-				"execution_count": 17
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
@@ -539,7 +425,7 @@
 				"source": [
 					"states"
 				],
-				"execution_count": 18
+				"execution_count": 24
 			},
 			{
 				"cell_type": "code",
@@ -557,7 +443,7 @@
 				"source": [
 					"simple_countplot_requirement([states])"
 				],
-				"execution_count": 19
+				"execution_count": 25
 			},
 			{
 				"cell_type": "code",
@@ -576,7 +462,7 @@
 					"from enya.model import SemanticFunction\r\n",
 					"countplot_sf = SemanticFunction(\"countplot\", simple_countplot, simple_countplot_requirement)"
 				],
-				"execution_count": 20
+				"execution_count": 26
 			},
 			{
 				"cell_type": "code",
@@ -594,7 +480,7 @@
 				"source": [
 					"simple_countplot_requirement(sdf.attributes)"
 				],
-				"execution_count": 21
+				"execution_count": 27
 			},
 			{
 				"cell_type": "code",
@@ -612,7 +498,7 @@
 				"source": [
 					"countplot_sf.is_applicable(sdf)"
 				],
-				"execution_count": 22
+				"execution_count": 28
 			},
 			{
 				"cell_type": "code",
@@ -631,7 +517,7 @@
 					"print(countplot_sf.is_applicable(sdf))\r\n",
 					"# prints True if there is a categorical attribute"
 				],
-				"execution_count": 23
+				"execution_count": 29
 			},
 			{
 				"cell_type": "code",
@@ -668,7 +554,7 @@
 				"source": [
 					"kb.add(countplot_sf)"
 				],
-				"execution_count": 25
+				"execution_count": 30
 			},
 			{
 				"cell_type": "code",
@@ -686,7 +572,7 @@
 				"source": [
 					"print(dir(sdf.plot))"
 				],
-				"execution_count": 26
+				"execution_count": 31
 			},
 			{
 				"cell_type": "code",
@@ -711,101 +597,6 @@
 					"            suggestions.append(f\"{sf_name}(attribute={attribute.name})\")\r\n",
 					"    return suggestions"
 				],
-				"execution_count": 27
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"for attribute in sdf.attributes.values:\r\n",
-					"    if 'categorical' in attribute.get_logical_type().tags:\r\n",
-					"        print(True)"
-				],
-				"execution_count": 28
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"for attribute in sdf.attributes.values:\r\n",
-					"    if 'categorical' in attribute.get_logical_type().tags:\r\n",
-					"        print(True)"
-				],
-				"execution_count": 29
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"for attribute in sdf.attributes.values:\r\n",
-					"    type(attribute.get_logical_type())"
-				],
-				"execution_count": 30
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"simple_countplot_suggestions(\"countplot\", sdf)"
-				],
-				"execution_count": 31
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"sdf.attributes.values()"
-				],
 				"execution_count": 32
 			},
 			{
@@ -822,7 +613,9 @@
 					}
 				},
 				"source": [
-					"sdf.attributes.values"
+					"for attribute in sdf.attributes.values:\r\n",
+					"    if 'categorical' in attribute.get_logical_type().tags:\r\n",
+					"        print(True)"
 				],
 				"execution_count": 33
 			},
@@ -840,7 +633,9 @@
 					}
 				},
 				"source": [
-					"sdf.attributes[\"StatesAttribute\"].get_logical_type().tags"
+					"for attribute in sdf.attributes.values:\r\n",
+					"    if 'categorical' in attribute.get_logical_type().tags:\r\n",
+					"        print(True)"
 				],
 				"execution_count": 34
 			},
@@ -858,7 +653,8 @@
 					}
 				},
 				"source": [
-					"states.get_logical_type().tags"
+					"for attribute in sdf.attributes.values:\r\n",
+					"    type(attribute.get_logical_type())"
 				],
 				"execution_count": 35
 			},
@@ -879,6 +675,97 @@
 					"simple_countplot_suggestions(\"countplot\", sdf)"
 				],
 				"execution_count": 36
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# This is in the original document\r\n",
+					"sdf.attributes.values()"
+				],
+				"execution_count": 37
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sdf.attributes.values"
+				],
+				"execution_count": 38
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sdf.attributes[\"StatesAttribute\"].get_logical_type().tags"
+				],
+				"execution_count": 39
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"states.get_logical_type().tags"
+				],
+				"execution_count": 40
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"simple_countplot_suggestions(\"countplot\", sdf)"
+				],
+				"execution_count": 41
 			}
 		]
 	}
