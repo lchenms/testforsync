@@ -252,20 +252,20 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "enyasmallpool",
+					"referenceName": "enyanewpool",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
-					"driverMemory": "28g",
-					"driverCores": 4,
-					"executorMemory": "28g",
-					"executorCores": 4,
+					"driverMemory": "56g",
+					"driverCores": 8,
+					"executorMemory": "56g",
+					"executorCores": 8,
 					"numExecutors": 2,
 					"conf": {
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "695f0dd7-3038-40e8-afe7-dd44d6132cba"
+						"spark.autotune.trackingId": "61a61e41-a5f3-4e9a-92be-0988428cc9cb"
 					}
 				},
 				"metadata": {
@@ -279,19 +279,18 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/enyasmallpool",
-						"name": "enyasmallpool",
+						"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/enyanewpool",
+						"name": "enyanewpool",
 						"type": "Spark",
-						"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/enyasmallpool",
+						"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/enyanewpool",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
 						},
-						"sparkVersion": "3.1",
+						"sparkVersion": "3.2",
 						"nodeCount": 10,
-						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
+						"cores": 8,
+						"memory": 56
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -318,7 +317,7 @@
 							"import enya as en"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 19
 					},
 					{
 						"cell_type": "code",
@@ -348,10 +347,51 @@
 							"TENANT_ID = \"72f988bf-86f1-41af-91ab-2d7cd011db47\"\r\n",
 							"\r\n",
 							"cdm_corpus = objectmodel.CdmCorpusDefinition()\r\n",
-							"adls_adapter = ADLSAdapter(hostname=adls_endpoint, root=root_path, token_provider=DeviceCodeCredential(tenant_id=TENANT_ID))"
+							"# adls_adapter = ADLSAdapter(hostname=adls_endpoint, root=root_path, token_provider=DeviceCodeCredential(tenant_id=TENANT_ID))"
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 20
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"class TokenProvider:\r\n",
+							"    token = DeviceCodeCredential(tenant_id=TENANT_ID).get_token('https://storage.azure.com/.default').token\r\n",
+							"    def get_token(self, *args):\r\n",
+							"        return \"Bearer \" + self.token"
+						],
+						"outputs": [],
+						"execution_count": 21
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"adls_adapter = ADLSAdapter(hostname=adls_endpoint, root=root_path, token_provider=TokenProvider())"
+						],
+						"outputs": [],
+						"execution_count": 22
 					},
 					{
 						"cell_type": "code",
@@ -373,7 +413,7 @@
 							"KB.make_default()"
 						],
 						"outputs": [],
-						"execution_count": 4
+						"execution_count": 26
 					},
 					{
 						"cell_type": "code",
@@ -392,7 +432,7 @@
 							"KB.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter})"
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 27
 					},
 					{
 						"cell_type": "code",
@@ -34531,27 +34571,27 @@
 				"libraryRequirements": {
 					"content": "name: enya_small\r\nchannels:\r\n  - conda-forge\r\ndependencies:\r\n  - python=3.8\r\n  - cloudpickle\r\n  - graphviz\r\n  - ipykernel\r\n  - ipython\r\n  - jupyter\r\n  - matplotlib\r\n  - numpy>=1.19.2\r\n  - pandas>=1.2\r\n  - pyyaml\r\n  - python-graphviz\r\n  - scikit-learn\r\n  - seaborn\r\n  - pip\r\n  - pip:\r\n    - commondatamodel-objectmodel==1.4.2\r\n    - koalas>=1.8.2\r\n    - nest-asyncio\r\n    - pyspark==3.2.1\r\n    - dabl",
 					"filename": "environment_small.yml",
-					"time": "2022-04-27T18:30:25.5844571Z"
+					"time": "2022-04-27T19:17:10.7260101Z"
 				},
 				"isComputeIsolationEnabled": false,
 				"sparkConfigProperties": {
 					"configurationType": "File",
 					"filename": "config.txt",
 					"content": "spark.yarn.appMasterEnv.PATH    \"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/trusted-service-user/cluster-env/env/bin:/home/trusted-service-user/cluster-env/clonedenv/bin\"",
-					"time": "2022-04-27T18:30:25.5844571Z"
+					"time": "2022-04-27T19:17:10.7260101Z"
 				},
 				"sessionLevelPackagesEnabled": true,
 				"customLibraries": [
 					{
-						"name": "enya-0.0.4.post1128.dev0+g1a0ef5fa.dirty-py3-none-any.whl",
-						"path": "lizzy-myworkspace/libraries/enya-0.0.4.post1128.dev0+g1a0ef5fa.dirty-py3-none-any.whl",
+						"name": "commondatamodel_objectmodel-1.4.2-py3-none-any.whl",
+						"path": "lizzy-myworkspace/libraries/commondatamodel_objectmodel-1.4.2-py3-none-any.whl",
 						"containerName": "prep",
 						"uploadedTimestamp": "0001-01-01T00:00:00+00:00",
 						"type": "whl"
 					},
 					{
-						"name": "commondatamodel_objectmodel-1.4.2-py3-none-any.whl",
-						"path": "lizzy-myworkspace/libraries/commondatamodel_objectmodel-1.4.2-py3-none-any.whl",
+						"name": "enya-0.0.4.post1138.dev0+gd0edf567.dirty-py3-none-any.whl",
+						"path": "lizzy-myworkspace/libraries/enya-0.0.4.post1138.dev0+gd0edf567.dirty-py3-none-any.whl",
 						"containerName": "prep",
 						"uploadedTimestamp": "0001-01-01T00:00:00+00:00",
 						"type": "whl"
