@@ -252,7 +252,7 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "Spark1",
+					"referenceName": "enyasmallpool",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
@@ -265,7 +265,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "4835ef5f-246e-475c-8643-d39ff768c4dd"
+						"spark.autotune.trackingId": "695f0dd7-3038-40e8-afe7-dd44d6132cba"
 					}
 				},
 				"metadata": {
@@ -279,10 +279,10 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/Spark1",
-						"name": "Spark1",
+						"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/enyasmallpool",
+						"name": "enyasmallpool",
 						"type": "Spark",
-						"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/Spark1",
+						"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/enyasmallpool",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
@@ -318,7 +318,7 @@
 							"import enya as en"
 						],
 						"outputs": [],
-						"execution_count": 2
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -34580,8 +34580,29 @@
 				"nodeSize": "Small",
 				"nodeSizeFamily": "MemoryOptimized",
 				"sparkVersion": "3.1",
+				"libraryRequirements": {
+					"content": "name: enya_small\r\nchannels:\r\n  - conda-forge\r\ndependencies:\r\n  - python=3.8\r\n  - cloudpickle\r\n  - graphviz\r\n  - ipykernel\r\n  - ipython\r\n  - jupyter\r\n  - matplotlib\r\n  - numpy>=1.19.2\r\n  - pandas>=1.2\r\n  - pyyaml\r\n  - python-graphviz\r\n  - scikit-learn\r\n  - seaborn\r\n  - pip\r\n  - pip:\r\n    - commondatamodel-objectmodel==1.4.2\r\n    - koalas>=1.8.2\r\n    - nest-asyncio\r\n    - pyspark==3.2.1\r\n    - dabl",
+					"filename": "environment_small.yml",
+					"time": "2022-04-27T18:37:25.4224985Z"
+				},
 				"isComputeIsolationEnabled": false,
 				"sessionLevelPackagesEnabled": false,
+				"customLibraries": [
+					{
+						"name": "enya-0.0.4.post1128.dev0+g1a0ef5fa.dirty-py3-none-any.whl",
+						"path": "lizzy-myworkspace/libraries/enya-0.0.4.post1128.dev0+g1a0ef5fa.dirty-py3-none-any.whl",
+						"containerName": "prep",
+						"uploadedTimestamp": "0001-01-01T00:00:00+00:00",
+						"type": "whl"
+					},
+					{
+						"name": "commondatamodel_objectmodel-1.4.2-py3-none-any.whl",
+						"path": "lizzy-myworkspace/libraries/commondatamodel_objectmodel-1.4.2-py3-none-any.whl",
+						"containerName": "prep",
+						"uploadedTimestamp": "0001-01-01T00:00:00+00:00",
+						"type": "whl"
+					}
+				],
 				"annotations": []
 			},
 			"dependsOn": [],
