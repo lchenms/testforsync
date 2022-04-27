@@ -17,311 +17,11 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "d456c655-59a4-4065-af2e-337d8575c690"
+				"spark.autotune.trackingId": "81f8759e-5325-47db-b780-5a1678baf668"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"synapse_widget": {
-				"version": "0.1",
-				"state": {
-					"9600712b-f1cf-4c2a-98d8-7597f74b1862": {
-						"type": "Synapse.DataFrame",
-						"sync_state": {
-							"table": {
-								"rows": [
-									{
-										"0": "1",
-										"1": "190167.33999999636",
-										"2": "2.8735733929704184"
-									},
-									{
-										"0": "3",
-										"1": "14790.389999999987",
-										"2": "2.884803978935047"
-									},
-									{
-										"0": "5",
-										"1": "17187.240000000013",
-										"2": "2.8550232558139554"
-									},
-									{
-										"0": "2",
-										"1": "49399.7400000001",
-										"2": "3.130726915520635"
-									},
-									{
-										"0": "4",
-										"1": "8558.350000000004",
-										"2": "2.9976707530648"
-									},
-									{
-										"0": "6",
-										"1": "10741.91",
-										"2": "2.8798686327077747"
-									}
-								],
-								"schema": [
-									{
-										"key": "0",
-										"name": "PassengerCount",
-										"type": "int"
-									},
-									{
-										"key": "1",
-										"name": "SumTripDistance",
-										"type": "double"
-									},
-									{
-										"key": "2",
-										"name": "AvgTripDistance",
-										"type": "double"
-									}
-								],
-								"truncated": false
-							},
-							"isSummary": false,
-							"language": "scala"
-						},
-						"persist_state": {
-							"view": {
-								"type": "details",
-								"chartOptions": {
-									"chartType": "bar",
-									"aggregationType": "sum",
-									"categoryFieldKeys": [
-										"1"
-									],
-									"seriesFieldKeys": [
-										"0"
-									],
-									"isStacked": false
-								}
-							}
-						}
-					},
-					"efd7dba8-b4bc-4dbb-9b3e-e9bb79c339d9": {
-						"type": "Synapse.DataFrame",
-						"sync_state": {
-							"table": {
-								"rows": [
-									{
-										"0": "PreciseTimeStamp",
-										"1": "Tenant",
-										"2": "ClusterName",
-										"3": "EventType"
-									},
-									{
-										"0": "2020-10-05 22:00:21.4483455",
-										"1": "synapse-cluster-service-canary-eastus2euap",
-										"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-										"3": "ClusterCreationRequestReceived"
-									},
-									{
-										"0": "2020-10-05 22:00:21.5599039",
-										"1": "synapse-cluster-service-canary-eastus2euap",
-										"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-										"3": "ClusterInstanceCreated"
-									},
-									{
-										"0": "2020-10-05 22:00:21.5662781",
-										"1": "synapse-cluster-service-canary-eastus2euap",
-										"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-										"3": "ClusterCreationRequestSaved"
-									},
-									{
-										"0": "2020-10-05 22:00:22.3459613",
-										"1": "synapse-cluster-service-canary-eastus2euap",
-										"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-										"3": "ClusterResourcesCreated"
-									},
-									{
-										"0": "2020-10-05 22:00:22.3619822",
-										"1": "synapse-cluster-service-canary-eastus2euap",
-										"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-										"3": "VirtualMachinesResourcesCreated"
-									},
-									{
-										"0": "2020-10-05 22:00:40.0343549",
-										"1": "synapse-cluster-service-canary-eastus2euap",
-										"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-										"3": "VirtualMachinesCreated"
-									},
-									{
-										"0": "2020-10-05 22:00:40.0426343",
-										"1": "synapse-cluster-service-canary-eastus2euap",
-										"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-										"3": "ClusterResourcesAndVmsCreated"
-									},
-									{
-										"0": "2020-10-05 22:00:40.0426582",
-										"1": "synapse-cluster-service-canary-eastus2euap",
-										"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-										"3": "ClusterCreationRequestSuccessful"
-									},
-									{
-										"0": "2020-10-05 22:02:05.8827558",
-										"1": "synapse-cluster-service-canary-eastus2euap",
-										"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-										"3": "AllVirtualMachinesInitialized"
-									}
-								],
-								"schema": [
-									{
-										"key": "0",
-										"name": "_c0",
-										"type": "string"
-									},
-									{
-										"key": "1",
-										"name": "_c1",
-										"type": "string"
-									},
-									{
-										"key": "2",
-										"name": "_c2",
-										"type": "string"
-									},
-									{
-										"key": "3",
-										"name": "_c3",
-										"type": "string"
-									}
-								],
-								"truncated": false
-							},
-							"isSummary": false,
-							"language": "scala"
-						},
-						"persist_state": {
-							"view": {
-								"type": "details",
-								"chartOptions": {
-									"chartType": "bar",
-									"aggregationType": "count",
-									"categoryFieldKeys": [
-										"0"
-									],
-									"seriesFieldKeys": [
-										"0"
-									],
-									"isStacked": false
-								}
-							}
-						}
-					},
-					"544b4054-44bb-4aac-ae8f-90d46ab2e3da": {
-						"type": "Synapse.DataFrame",
-						"sync_state": {
-							"table": {
-								"rows": [
-									{
-										"0": "PreciseTimeStamp",
-										"1": "Tenant",
-										"2": "ClusterName",
-										"3": "EventType"
-									},
-									{
-										"0": "2020-10-05 22:00:21.4483455",
-										"1": "synapse-cluster-service-canary-eastus2euap",
-										"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-										"3": "ClusterCreationRequestReceived"
-									},
-									{
-										"0": "2020-10-05 22:00:21.5599039",
-										"1": "synapse-cluster-service-canary-eastus2euap",
-										"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-										"3": "ClusterInstanceCreated"
-									},
-									{
-										"0": "2020-10-05 22:00:21.5662781",
-										"1": "synapse-cluster-service-canary-eastus2euap",
-										"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-										"3": "ClusterCreationRequestSaved"
-									},
-									{
-										"0": "2020-10-05 22:00:22.3459613",
-										"1": "synapse-cluster-service-canary-eastus2euap",
-										"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-										"3": "ClusterResourcesCreated"
-									},
-									{
-										"0": "2020-10-05 22:00:22.3619822",
-										"1": "synapse-cluster-service-canary-eastus2euap",
-										"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-										"3": "VirtualMachinesResourcesCreated"
-									},
-									{
-										"0": "2020-10-05 22:00:40.0343549",
-										"1": "synapse-cluster-service-canary-eastus2euap",
-										"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-										"3": "VirtualMachinesCreated"
-									},
-									{
-										"0": "2020-10-05 22:00:40.0426343",
-										"1": "synapse-cluster-service-canary-eastus2euap",
-										"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-										"3": "ClusterResourcesAndVmsCreated"
-									},
-									{
-										"0": "2020-10-05 22:00:40.0426582",
-										"1": "synapse-cluster-service-canary-eastus2euap",
-										"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-										"3": "ClusterCreationRequestSuccessful"
-									},
-									{
-										"0": "2020-10-05 22:02:05.8827558",
-										"1": "synapse-cluster-service-canary-eastus2euap",
-										"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-										"3": "AllVirtualMachinesInitialized"
-									}
-								],
-								"schema": [
-									{
-										"key": "0",
-										"name": "_c0",
-										"type": "string"
-									},
-									{
-										"key": "1",
-										"name": "_c1",
-										"type": "string"
-									},
-									{
-										"key": "2",
-										"name": "_c2",
-										"type": "string"
-									},
-									{
-										"key": "3",
-										"name": "_c3",
-										"type": "string"
-									}
-								],
-								"truncated": false
-							},
-							"isSummary": false,
-							"language": "scala"
-						},
-						"persist_state": {
-							"view": {
-								"type": "details",
-								"chartOptions": {
-									"chartType": "bar",
-									"aggregationType": "count",
-									"categoryFieldKeys": [
-										"0"
-									],
-									"seriesFieldKeys": [
-										"0"
-									],
-									"isStacked": false
-								}
-							}
-						}
-					}
-				}
-			},
 			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
@@ -343,7 +43,7 @@
 				"nodeCount": 10,
 				"cores": 4,
 				"memory": 28,
-				"extraHeader": null
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -351,6 +51,9 @@
 			{
 				"cell_type": "code",
 				"metadata": {
+					"microsoft": {
+						"language": "python"
+					},
 					"collapsed": false
 				},
 				"source": [
@@ -358,7 +61,6 @@
 					"df = spark.read.load('abfss://lizzyusers@lizzycontosolake.dfs.core.windows.net/NYCTaxi/PassengerCountStats_parquetformat/part-00000-73c277f0-6562-4fbf-8eaf-d3a65eeace25-c000.snappy.parquet', format='parquet')\r\n",
 					"display(df.limit(10))"
 				],
-				"attachments": null,
 				"execution_count": 1
 			},
 			{
@@ -383,7 +85,6 @@
 					"df1 = spark.read.load('abfss://lizzyusers@lizzycontosolake.dfs.core.windows.net/enya_cluster_time_ex.csv', format='csv')\r\n",
 					"display(df1.limit(10))"
 				],
-				"attachments": null,
 				"execution_count": 2
 			},
 			{
@@ -404,7 +105,6 @@
 					"df2 = spark.read.load('/enya_cluster_time_ex.csv',format='csv')\r\n",
 					"display(df2.limit(10))"
 				],
-				"attachments": null,
 				"execution_count": 3
 			}
 		]
