@@ -32837,7 +32837,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "2eb7de92-c9af-479a-891c-d5bd75788a4c"
+						"spark.autotune.trackingId": "0a761809-9728-4912-937a-77f3b5afa2f2"
 					}
 				},
 				"metadata": {
@@ -32862,15 +32862,13 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"import pandas as pd"
 						],
@@ -33932,20 +33930,20 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "enyatest3",
+					"referenceName": "Spark1",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
-					"driverMemory": "56g",
-					"driverCores": 8,
-					"executorMemory": "56g",
-					"executorCores": 8,
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
 					"numExecutors": 2,
 					"conf": {
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "15901ecd-2d10-4295-954c-c38dcc43da01"
+						"spark.autotune.trackingId": "c0542a5f-dc56-4127-a0c0-ca9eddb310f3"
 					}
 				},
 				"metadata": {
@@ -33959,18 +33957,19 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/enyatest3",
-						"name": "enyatest3",
+						"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/Spark1",
+						"name": "Spark1",
 						"type": "Spark",
-						"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/enyatest3",
+						"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/Spark1",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
 						},
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
-						"cores": 8,
-						"memory": 56
+						"cores": 4,
+						"memory": 28,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
