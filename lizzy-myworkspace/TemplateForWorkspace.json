@@ -25,7 +25,7 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('workspaceName'), '/enyanewpool')]",
+			"name": "[concat(parameters('workspaceName'), '/enyasmallpool')]",
 			"type": "Microsoft.Synapse/workspaces/bigDataPools",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -265,7 +265,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "06758652-acf6-4c65-bacf-5ed9b36f876f"
+						"spark.autotune.trackingId": "4835ef5f-246e-475c-8643-d39ff768c4dd"
 					}
 				},
 				"metadata": {
@@ -290,7 +290,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -317,7 +318,7 @@
 							"import enya as en"
 						],
 						"outputs": [],
-						"execution_count": 1
+						"execution_count": 2
 					},
 					{
 						"cell_type": "code",
@@ -350,7 +351,7 @@
 							"adls_adapter = ADLSAdapter(hostname=adls_endpoint, root=root_path, token_provider=DeviceCodeCredential(tenant_id=TENANT_ID))"
 						],
 						"outputs": [],
-						"execution_count": 2
+						"execution_count": 3
 					},
 					{
 						"cell_type": "code",
@@ -372,7 +373,7 @@
 							"KB.make_default()"
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 4
 					},
 					{
 						"cell_type": "code",
@@ -391,7 +392,7 @@
 							"KB.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter})"
 						],
 						"outputs": [],
-						"execution_count": 4
+						"execution_count": 5
 					},
 					{
 						"cell_type": "code",
@@ -411,7 +412,7 @@
 							"sdf = KB.get_data(\"jobsInfo\")"
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 6
 					},
 					{
 						"cell_type": "code",
@@ -33943,7 +33944,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "c0542a5f-dc56-4127-a0c0-ca9eddb310f3"
+						"spark.autotune.trackingId": "b7df3ca3-00b2-4600-98f0-61c15e181a52"
 					}
 				},
 				"metadata": {
@@ -33968,8 +33969,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -34511,58 +34511,6 @@
 			"location": "eastus"
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/enyatest3')]",
-			"type": "Microsoft.Synapse/workspaces/bigDataPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"autoPause": {
-					"enabled": true,
-					"delayInMinutes": 15
-				},
-				"autoScale": {
-					"enabled": true,
-					"maxNodeCount": 10,
-					"minNodeCount": 3
-				},
-				"nodeCount": 10,
-				"nodeSize": "Medium",
-				"nodeSizeFamily": "MemoryOptimized",
-				"sparkVersion": "3.1",
-				"libraryRequirements": {
-					"content": "name: enya_small\r\nchannels:\r\n  - conda-forge\r\ndependencies:\r\n  - python=3.8\r\n  - cloudpickle\r\n  - graphviz\r\n  - ipykernel\r\n  - ipython\r\n  - jupyter\r\n  - matplotlib\r\n  - numpy>=1.19.2\r\n  - pandas>=1.2\r\n  - pyyaml\r\n  - python-graphviz\r\n  - scikit-learn\r\n  - seaborn\r\n  - pip\r\n  - pip:\r\n    - commondatamodel-objectmodel==1.4.2\r\n    - koalas>=1.8.2\r\n    - nest-asyncio\r\n    - pyspark==3.2.1\r\n    - dabl",
-					"filename": "environment_small.yml",
-					"time": "2022-04-27T17:18:22.9939889Z"
-				},
-				"isComputeIsolationEnabled": false,
-				"sparkConfigProperties": {
-					"configurationType": "File",
-					"filename": "config.txt",
-					"content": "spark.yarn.appMasterEnv.PATH    \"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/trusted-service-user/cluster-env/env/bin:/home/trusted-service-user/cluster-env/clonedenv/bin\"",
-					"time": "2022-04-27T17:18:22.9939889Z"
-				},
-				"sessionLevelPackagesEnabled": true,
-				"customLibraries": [
-					{
-						"name": "commondatamodel_objectmodel-1.4.2-py3-none-any.whl",
-						"path": "lizzy-myworkspace/libraries/commondatamodel_objectmodel-1.4.2-py3-none-any.whl",
-						"containerName": "prep",
-						"uploadedTimestamp": "0001-01-01T00:00:00+00:00",
-						"type": "whl"
-					},
-					{
-						"name": "enya-0.0.4.post1128.dev0+g1a0ef5fa.dirty-py3-none-any.whl",
-						"path": "lizzy-myworkspace/libraries/enya-0.0.4.post1128.dev0+g1a0ef5fa.dirty-py3-none-any.whl",
-						"containerName": "prep",
-						"uploadedTimestamp": "0001-01-01T00:00:00+00:00",
-						"type": "whl"
-					}
-				],
-				"annotations": []
-			},
-			"dependsOn": [],
-			"location": "eastus"
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/enyanewpool')]",
 			"type": "Microsoft.Synapse/workspaces/bigDataPools",
 			"apiVersion": "2019-06-01-preview",
@@ -34580,8 +34528,60 @@
 				"nodeSize": "Medium",
 				"nodeSizeFamily": "MemoryOptimized",
 				"sparkVersion": "3.2",
+				"libraryRequirements": {
+					"content": "name: enya_small\r\nchannels:\r\n  - conda-forge\r\ndependencies:\r\n  - python=3.8\r\n  - cloudpickle\r\n  - graphviz\r\n  - ipykernel\r\n  - ipython\r\n  - jupyter\r\n  - matplotlib\r\n  - numpy>=1.19.2\r\n  - pandas>=1.2\r\n  - pyyaml\r\n  - python-graphviz\r\n  - scikit-learn\r\n  - seaborn\r\n  - pip\r\n  - pip:\r\n    - commondatamodel-objectmodel==1.4.2\r\n    - koalas>=1.8.2\r\n    - nest-asyncio\r\n    - pyspark==3.2.1\r\n    - dabl",
+					"filename": "environment_small.yml",
+					"time": "2022-04-27T18:30:25.5844571Z"
+				},
 				"isComputeIsolationEnabled": false,
+				"sparkConfigProperties": {
+					"configurationType": "File",
+					"filename": "config.txt",
+					"content": "spark.yarn.appMasterEnv.PATH    \"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/trusted-service-user/cluster-env/env/bin:/home/trusted-service-user/cluster-env/clonedenv/bin\"",
+					"time": "2022-04-27T18:30:25.5844571Z"
+				},
 				"sessionLevelPackagesEnabled": true,
+				"customLibraries": [
+					{
+						"name": "enya-0.0.4.post1128.dev0+g1a0ef5fa.dirty-py3-none-any.whl",
+						"path": "lizzy-myworkspace/libraries/enya-0.0.4.post1128.dev0+g1a0ef5fa.dirty-py3-none-any.whl",
+						"containerName": "prep",
+						"uploadedTimestamp": "0001-01-01T00:00:00+00:00",
+						"type": "whl"
+					},
+					{
+						"name": "commondatamodel_objectmodel-1.4.2-py3-none-any.whl",
+						"path": "lizzy-myworkspace/libraries/commondatamodel_objectmodel-1.4.2-py3-none-any.whl",
+						"containerName": "prep",
+						"uploadedTimestamp": "0001-01-01T00:00:00+00:00",
+						"type": "whl"
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "eastus"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/enyasmallpool')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"autoPause": {
+					"enabled": true,
+					"delayInMinutes": 15
+				},
+				"autoScale": {
+					"enabled": true,
+					"maxNodeCount": 10,
+					"minNodeCount": 3
+				},
+				"nodeCount": 10,
+				"nodeSize": "Small",
+				"nodeSizeFamily": "MemoryOptimized",
+				"sparkVersion": "3.1",
+				"isComputeIsolationEnabled": false,
+				"sessionLevelPackagesEnabled": false,
 				"annotations": []
 			},
 			"dependsOn": [],
