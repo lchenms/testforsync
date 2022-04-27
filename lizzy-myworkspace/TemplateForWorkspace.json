@@ -28619,7 +28619,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "8039c3d4-7230-4c2c-8c5b-4a7546d75d8f"
+						"spark.autotune.trackingId": "a3f35738-b590-4c11-8d13-de50abdab5a9"
 					}
 				},
 				"metadata": {
@@ -28644,8 +28644,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -29886,20 +29885,20 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "enyatest3",
+					"referenceName": "Spark1",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
-					"driverMemory": "56g",
-					"driverCores": 8,
-					"executorMemory": "56g",
-					"executorCores": 8,
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
 					"numExecutors": 2,
 					"conf": {
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "a78534e6-4ffb-47d8-8b57-efad6a614df7"
+						"spark.autotune.trackingId": "c6b185d3-5048-4512-b3d1-96836e06e314"
 					}
 				},
 				"metadata": {
@@ -29913,18 +29912,18 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/enyatest3",
-						"name": "enyatest3",
+						"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/Spark1",
+						"name": "Spark1",
 						"type": "Spark",
-						"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/enyatest3",
+						"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/Spark1",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
 						},
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
-						"cores": 8,
-						"memory": 56
+						"cores": 4,
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -30439,20 +30438,20 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "enyatest3",
+					"referenceName": "Spark1",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
-					"driverMemory": "56g",
-					"driverCores": 8,
-					"executorMemory": "56g",
-					"executorCores": 8,
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
 					"numExecutors": 2,
 					"conf": {
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "d6acbca5-7dcc-46cb-84ff-192968a474a1"
+						"spark.autotune.trackingId": "550987bf-90f7-4b2b-b05b-1a2bba8b953f"
 					}
 				},
 				"metadata": {
@@ -30466,18 +30465,18 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/enyatest3",
-						"name": "enyatest3",
+						"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/Spark1",
+						"name": "Spark1",
 						"type": "Spark",
-						"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/enyatest3",
+						"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/Spark1",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
 						},
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
-						"cores": 8,
-						"memory": 56
+						"cores": 4,
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -30786,20 +30785,20 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "enyatest3",
+					"referenceName": "Spark1",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
-					"driverMemory": "56g",
-					"driverCores": 8,
-					"executorMemory": "56g",
-					"executorCores": 8,
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
 					"numExecutors": 2,
 					"conf": {
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "a5cc5336-4095-40ad-a147-f0e87d207706"
+						"spark.autotune.trackingId": "579f1bdc-2aeb-4e13-a2c3-04ac8ee49a43"
 					}
 				},
 				"metadata": {
@@ -30813,18 +30812,18 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/enyatest3",
-						"name": "enyatest3",
+						"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/Spark1",
+						"name": "Spark1",
 						"type": "Spark",
-						"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/enyatest3",
+						"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/Spark1",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
 						},
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
-						"cores": 8,
-						"memory": 56
+						"cores": 4,
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -31188,20 +31187,20 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "enyatest3",
+					"referenceName": "Spark1",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
-					"driverMemory": "56g",
-					"driverCores": 8,
-					"executorMemory": "56g",
-					"executorCores": 8,
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
 					"numExecutors": 2,
 					"conf": {
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "4f90ed8c-bb82-473c-bd6d-4d3794e0636c"
+						"spark.autotune.trackingId": "47573475-184b-4b6e-8e6e-bde41833ec07"
 					}
 				},
 				"metadata": {
@@ -31215,18 +31214,18 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/enyatest3",
-						"name": "enyatest3",
+						"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/Spark1",
+						"name": "Spark1",
 						"type": "Spark",
-						"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/enyatest3",
+						"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/Spark1",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
 						},
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
-						"cores": 8,
-						"memory": 56
+						"cores": 4,
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -32825,20 +32824,20 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "enyatest3",
+					"referenceName": "Spark1",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
-					"driverMemory": "56g",
-					"driverCores": 8,
-					"executorMemory": "56g",
-					"executorCores": 8,
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
 					"numExecutors": 2,
 					"conf": {
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "248e9077-02db-427f-8f61-7fbae3e70430"
+						"spark.autotune.trackingId": "0a761809-9728-4912-937a-77f3b5afa2f2"
 					}
 				},
 				"metadata": {
@@ -32852,18 +32851,18 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/enyatest3",
-						"name": "enyatest3",
+						"id": "/subscriptions/6f83e421-6b03-4154-9df4-fc8739806b66/resourceGroups/chenlizzy-playground/providers/Microsoft.Synapse/workspaces/lizzy-myworkspace/bigDataPools/Spark1",
+						"name": "Spark1",
 						"type": "Spark",
-						"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/enyatest3",
+						"endpoint": "https://lizzy-myworkspace.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/Spark1",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
 						},
 						"sparkVersion": "3.1",
 						"nodeCount": 10,
-						"cores": 8,
-						"memory": 56
+						"cores": 4,
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -34368,311 +34367,11 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "d456c655-59a4-4065-af2e-337d8575c690"
+						"spark.autotune.trackingId": "915e9b64-03af-42e4-9392-08c3f33ee71c"
 					}
 				},
 				"metadata": {
 					"saveOutput": true,
-					"synapse_widget": {
-						"version": "0.1",
-						"state": {
-							"9600712b-f1cf-4c2a-98d8-7597f74b1862": {
-								"type": "Synapse.DataFrame",
-								"sync_state": {
-									"table": {
-										"rows": [
-											{
-												"0": "1",
-												"1": "190167.33999999636",
-												"2": "2.8735733929704184"
-											},
-											{
-												"0": "3",
-												"1": "14790.389999999987",
-												"2": "2.884803978935047"
-											},
-											{
-												"0": "5",
-												"1": "17187.240000000013",
-												"2": "2.8550232558139554"
-											},
-											{
-												"0": "2",
-												"1": "49399.7400000001",
-												"2": "3.130726915520635"
-											},
-											{
-												"0": "4",
-												"1": "8558.350000000004",
-												"2": "2.9976707530648"
-											},
-											{
-												"0": "6",
-												"1": "10741.91",
-												"2": "2.8798686327077747"
-											}
-										],
-										"schema": [
-											{
-												"key": "0",
-												"name": "PassengerCount",
-												"type": "int"
-											},
-											{
-												"key": "1",
-												"name": "SumTripDistance",
-												"type": "double"
-											},
-											{
-												"key": "2",
-												"name": "AvgTripDistance",
-												"type": "double"
-											}
-										],
-										"truncated": false
-									},
-									"isSummary": false,
-									"language": "scala"
-								},
-								"persist_state": {
-									"view": {
-										"type": "details",
-										"chartOptions": {
-											"chartType": "bar",
-											"aggregationType": "sum",
-											"categoryFieldKeys": [
-												"1"
-											],
-											"seriesFieldKeys": [
-												"0"
-											],
-											"isStacked": false
-										}
-									}
-								}
-							},
-							"efd7dba8-b4bc-4dbb-9b3e-e9bb79c339d9": {
-								"type": "Synapse.DataFrame",
-								"sync_state": {
-									"table": {
-										"rows": [
-											{
-												"0": "PreciseTimeStamp",
-												"1": "Tenant",
-												"2": "ClusterName",
-												"3": "EventType"
-											},
-											{
-												"0": "2020-10-05 22:00:21.4483455",
-												"1": "synapse-cluster-service-canary-eastus2euap",
-												"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-												"3": "ClusterCreationRequestReceived"
-											},
-											{
-												"0": "2020-10-05 22:00:21.5599039",
-												"1": "synapse-cluster-service-canary-eastus2euap",
-												"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-												"3": "ClusterInstanceCreated"
-											},
-											{
-												"0": "2020-10-05 22:00:21.5662781",
-												"1": "synapse-cluster-service-canary-eastus2euap",
-												"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-												"3": "ClusterCreationRequestSaved"
-											},
-											{
-												"0": "2020-10-05 22:00:22.3459613",
-												"1": "synapse-cluster-service-canary-eastus2euap",
-												"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-												"3": "ClusterResourcesCreated"
-											},
-											{
-												"0": "2020-10-05 22:00:22.3619822",
-												"1": "synapse-cluster-service-canary-eastus2euap",
-												"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-												"3": "VirtualMachinesResourcesCreated"
-											},
-											{
-												"0": "2020-10-05 22:00:40.0343549",
-												"1": "synapse-cluster-service-canary-eastus2euap",
-												"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-												"3": "VirtualMachinesCreated"
-											},
-											{
-												"0": "2020-10-05 22:00:40.0426343",
-												"1": "synapse-cluster-service-canary-eastus2euap",
-												"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-												"3": "ClusterResourcesAndVmsCreated"
-											},
-											{
-												"0": "2020-10-05 22:00:40.0426582",
-												"1": "synapse-cluster-service-canary-eastus2euap",
-												"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-												"3": "ClusterCreationRequestSuccessful"
-											},
-											{
-												"0": "2020-10-05 22:02:05.8827558",
-												"1": "synapse-cluster-service-canary-eastus2euap",
-												"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-												"3": "AllVirtualMachinesInitialized"
-											}
-										],
-										"schema": [
-											{
-												"key": "0",
-												"name": "_c0",
-												"type": "string"
-											},
-											{
-												"key": "1",
-												"name": "_c1",
-												"type": "string"
-											},
-											{
-												"key": "2",
-												"name": "_c2",
-												"type": "string"
-											},
-											{
-												"key": "3",
-												"name": "_c3",
-												"type": "string"
-											}
-										],
-										"truncated": false
-									},
-									"isSummary": false,
-									"language": "scala"
-								},
-								"persist_state": {
-									"view": {
-										"type": "details",
-										"chartOptions": {
-											"chartType": "bar",
-											"aggregationType": "count",
-											"categoryFieldKeys": [
-												"0"
-											],
-											"seriesFieldKeys": [
-												"0"
-											],
-											"isStacked": false
-										}
-									}
-								}
-							},
-							"544b4054-44bb-4aac-ae8f-90d46ab2e3da": {
-								"type": "Synapse.DataFrame",
-								"sync_state": {
-									"table": {
-										"rows": [
-											{
-												"0": "PreciseTimeStamp",
-												"1": "Tenant",
-												"2": "ClusterName",
-												"3": "EventType"
-											},
-											{
-												"0": "2020-10-05 22:00:21.4483455",
-												"1": "synapse-cluster-service-canary-eastus2euap",
-												"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-												"3": "ClusterCreationRequestReceived"
-											},
-											{
-												"0": "2020-10-05 22:00:21.5599039",
-												"1": "synapse-cluster-service-canary-eastus2euap",
-												"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-												"3": "ClusterInstanceCreated"
-											},
-											{
-												"0": "2020-10-05 22:00:21.5662781",
-												"1": "synapse-cluster-service-canary-eastus2euap",
-												"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-												"3": "ClusterCreationRequestSaved"
-											},
-											{
-												"0": "2020-10-05 22:00:22.3459613",
-												"1": "synapse-cluster-service-canary-eastus2euap",
-												"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-												"3": "ClusterResourcesCreated"
-											},
-											{
-												"0": "2020-10-05 22:00:22.3619822",
-												"1": "synapse-cluster-service-canary-eastus2euap",
-												"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-												"3": "VirtualMachinesResourcesCreated"
-											},
-											{
-												"0": "2020-10-05 22:00:40.0343549",
-												"1": "synapse-cluster-service-canary-eastus2euap",
-												"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-												"3": "VirtualMachinesCreated"
-											},
-											{
-												"0": "2020-10-05 22:00:40.0426343",
-												"1": "synapse-cluster-service-canary-eastus2euap",
-												"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-												"3": "ClusterResourcesAndVmsCreated"
-											},
-											{
-												"0": "2020-10-05 22:00:40.0426582",
-												"1": "synapse-cluster-service-canary-eastus2euap",
-												"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-												"3": "ClusterCreationRequestSuccessful"
-											},
-											{
-												"0": "2020-10-05 22:02:05.8827558",
-												"1": "synapse-cluster-service-canary-eastus2euap",
-												"2": "e8a02b9c-0f1c-4b95-8790-6b785c1c8309",
-												"3": "AllVirtualMachinesInitialized"
-											}
-										],
-										"schema": [
-											{
-												"key": "0",
-												"name": "_c0",
-												"type": "string"
-											},
-											{
-												"key": "1",
-												"name": "_c1",
-												"type": "string"
-											},
-											{
-												"key": "2",
-												"name": "_c2",
-												"type": "string"
-											},
-											{
-												"key": "3",
-												"name": "_c3",
-												"type": "string"
-											}
-										],
-										"truncated": false
-									},
-									"isSummary": false,
-									"language": "scala"
-								},
-								"persist_state": {
-									"view": {
-										"type": "details",
-										"chartOptions": {
-											"chartType": "bar",
-											"aggregationType": "count",
-											"categoryFieldKeys": [
-												"0"
-											],
-											"seriesFieldKeys": [
-												"0"
-											],
-											"isStacked": false
-										}
-									}
-								}
-							}
-						}
-					},
 					"enableDebugMode": false,
 					"kernelspec": {
 						"name": "synapse_pyspark",
@@ -34694,7 +34393,7 @@
 						"nodeCount": 10,
 						"cores": 4,
 						"memory": 28,
-						"extraHeader": null
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -34702,6 +34401,9 @@
 					{
 						"cell_type": "code",
 						"metadata": {
+							"microsoft": {
+								"language": "python"
+							},
 							"collapsed": false
 						},
 						"source": [
@@ -34709,7 +34411,6 @@
 							"df = spark.read.load('abfss://lizzyusers@lizzycontosolake.dfs.core.windows.net/NYCTaxi/PassengerCountStats_parquetformat/part-00000-73c277f0-6562-4fbf-8eaf-d3a65eeace25-c000.snappy.parquet', format='parquet')\r\n",
 							"display(df.limit(10))"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 1
 					},
@@ -34735,7 +34436,6 @@
 							"df1 = spark.read.load('abfss://lizzyusers@lizzycontosolake.dfs.core.windows.net/enya_cluster_time_ex.csv', format='csv')\r\n",
 							"display(df1.limit(10))"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 2
 					},
@@ -34757,7 +34457,6 @@
 							"df2 = spark.read.load('/enya_cluster_time_ex.csv',format='csv')\r\n",
 							"display(df2.limit(10))"
 						],
-						"attachments": null,
 						"outputs": [],
 						"execution_count": 3
 					}
