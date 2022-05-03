@@ -1,0 +1,523 @@
+{
+	"name": "stub_from_frame_grounding",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "9d427c2e-919b-47fd-95bf-9d98fcebf8e3"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "python"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"import pandas as pd\n",
+					"import sys\n",
+					"import os\n",
+					"import re\n",
+					"import datetime as dt\n",
+					"import enya as en"
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"from enya.discovery import stub_from_frame\n",
+					"\n",
+					"storage_account = 'lizzycontosolake'\n",
+					"lizzyusers = f'abfss://lizzyusers@{storage_account}.dfs.core.windows.net'"
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"kb = en.KB()\n",
+					"kb.make_default()\n",
+					"\n",
+					"# Use fname for the df and pass in rel_fname for stub_from_frame\n",
+					"# Ideally when we check the grounding informaiton the relative path should be there\n",
+					"entity_name = 'jobsInfo'\n",
+					"fname = f'{lizzyusers}/data/job_level_data_sample.csv'\n",
+					"rel_fname = '../data/job_level_data_sample.csv'\n",
+					"df = spark.read.format('csv').load(fname).toPandas()\n",
+					"entity = stub_from_frame(entity_name=entity_name, df=df, filename=rel_fname)\n",
+					"entity"
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"kb.get_entities()"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"sdf = kb.get_data(\"jobsInfo\")\n",
+					"sdf.head()"
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Write to manifest\n",
+					"en.backend.set_backend(\"koalas\")\n",
+					"\n",
+					"from azure.identity import InteractiveBrowserCredential\n",
+					"from azure.identity import DeviceCodeCredential\n",
+					"from cdm import objectmodel\n",
+					"from cdm.objectmodel import CdmCorpusDefinition\n",
+					"from cdm.storage import ADLSAdapter\n",
+					"\n",
+					"adls_endpoint = \"https://lizzycontosolake.dfs.core.windows.net/lizzyusers\"\n",
+					"root_path_write = \"stub_from_frame_results\"\n",
+					"\n",
+					"ADLS_MOUNT = \"adls\"\n",
+					"\n",
+					"TENANT_ID = \"72f988bf-86f1-41af-91ab-2d7cd011db47\"\n",
+					"\n",
+					"# cdm_corpus = objectmodel.CdmCorpusDefinition()"
+				],
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"class TokenProvider:\n",
+					"    token = DeviceCodeCredential(tenant_id=TENANT_ID).get_token('https://storage.azure.com/.default').token\n",
+					"    def get_token(self, *args):\n",
+					"        return \"Bearer \" + self.token\n",
+					"\n",
+					"adls_adapter = ADLSAdapter(hostname=adls_endpoint, root=root_path_write, token_provider=TokenProvider())"
+				],
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"kb.write_to_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter})"
+				],
+				"execution_count": 8
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"kb.clean()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"kb.load_from_manifest(\"adls:/StudentMedical.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter})"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"kb.get_entities()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"sdf = kb.get_data(\"jobsInfo\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					""
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"# Load CDM model\n",
+					"KB = en.KB()\n",
+					"en.backend.set_backend(\"koalas\")\n",
+					"KB.make_default()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					""
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"KB.load_from_manifest(\"local:/cdm/jobsModel.manifest.cdm.json\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"KB.get_entities()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"KB.write_to_manifest(\"enya/jobsModel.manifest.cdm.json\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from azure.identity import InteractiveBrowserCredential\n",
+					"from azure.identity import DeviceCodeCredential\n",
+					"from cdm import objectmodel\n",
+					"from cdm.objectmodel import CdmCorpusDefinition\n",
+					"# from cdm.storage.syms import SymsAdapter\n",
+					"from cdm.storage import ADLSAdapter\n",
+					"\n",
+					"adls_endpoint = \"https://lizzycontosolake.dfs.core.windows.net/lizzyusers\"\n",
+					"root_path = \"cdm\"\n",
+					"\n",
+					"ADLS_MOUNT = \"adls\"\n",
+					"\n",
+					"TENANT_ID = \"72f988bf-86f1-41af-91ab-2d7cd011db47\"\n",
+					"\n",
+					"cdm_corpus = objectmodel.CdmCorpusDefinition()\n",
+					"# adls_adapter = ADLSAdapter(hostname=adls_endpoint, root=root_path, token_provider=DeviceCodeCredential(tenant_id=TENANT_ID))"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"class TokenProvider:\n",
+					"    token = InteractiveBrowserCredential(tenant_id=TENANT_ID)\n",
+					"    def get_token(self, *args):\n",
+					"        return \"Bearer \" + self.token.get_token('https://storage.azure.com/.default').token"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"class TokenProvider:\n",
+					"    token = DeviceCodeCredential(tenant_id=TENANT_ID).get_token('https://storage.azure.com/.default').token\n",
+					"    def get_token(self, *args):\n",
+					"        return \"Bearer \" + self.token"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"adls_adapter = ADLSAdapter(hostname=adls_endpoint, root=root_path, token_provider=TokenProvider())"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"KB.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter})"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"KB.get_entities()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Generate semantic dataframe for job entity\n",
+					"sdf = KB.get_data(\"jobsInfo\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"sdf"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# In new codebase we no longer have that\n",
+					"# sdf.standardize()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sdf.sample(frac = .5)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Message column is a string containing multiple information (workspace, poolname, etc)\n",
+					"sdf[\"Message\"].sample(frac = .5)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"root_path_write = \"enya_kb\"\n",
+					"adls_adapter_write = ADLSAdapter(hostname=adls_endpoint, root=root_path_write, token_provider=TokenProvider())\n",
+					"# adls_adapter_write = ADLSAdapter(hostname=adls_endpoint, root=root_path_write, token_provider=DeviceCodeCredential(tenant_id=TENANT_ID))"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"KB.write_to_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter_write})"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"KB.get_entities()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"KB.clean()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"KB.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter_write})"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"KB.get_entities()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sdf_write = KB.get_data(\"jobsInfo\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sdf_write.standardize()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"outputs_hidden": false,
+						"source_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sdf_write.sample(frac = .5)"
+				],
+				"execution_count": null
+			}
+		]
+	}
+}
