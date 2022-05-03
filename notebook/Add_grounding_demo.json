@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "707f38f7-0a9f-4e26-9ba6-480e327dd1d3"
+				"spark.autotune.trackingId": "681132c7-abe9-4471-b9a5-bcc964aea0ed"
 			}
 		},
 		"metadata": {
@@ -69,7 +69,7 @@
 					"import datetime as dt\r\n",
 					"import enya as en"
 				],
-				"execution_count": 9
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -90,7 +90,7 @@
 					"en.backend.set_backend(\"koalas\")\r\n",
 					"KB.make_default()"
 				],
-				"execution_count": 10
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -119,10 +119,9 @@
 					"\r\n",
 					"TENANT_ID = \"72f988bf-86f1-41af-91ab-2d7cd011db47\"\r\n",
 					"\r\n",
-					"cdm_corpus = objectmodel.CdmCorpusDefinition()\r\n",
-					"# adls_adapter = ADLSAdapter(hostname=adls_endpoint, root=root_path, token_provider=DeviceCodeCredential(tenant_id=TENANT_ID))"
+					"cdm_corpus = objectmodel.CdmCorpusDefinition()"
 				],
-				"execution_count": 11
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -145,7 +144,7 @@
 					"\r\n",
 					"adls_adapter = ADLSAdapter(hostname=adls_endpoint, root=root_path, token_provider=TokenProvider())"
 				],
-				"execution_count": 12
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -163,7 +162,25 @@
 				"source": [
 					"KB.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter})"
 				],
-				"execution_count": 13
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"KB.get_entities()"
+				],
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -182,7 +199,7 @@
 					"# Generate semantic dataframe for job entity\n",
 					"sdf = KB.get_data(\"jobsInfo\")"
 				],
-				"execution_count": 6
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -200,7 +217,7 @@
 				"source": [
 					"sdf.sample(frac = .5)"
 				],
-				"execution_count": 6
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -219,7 +236,7 @@
 					"# Message column is a string containing multiple information (workspace, poolname, etc)\n",
 					"sdf[\"Message\"].sample(frac = .5)"
 				],
-				"execution_count": 8
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -236,9 +253,9 @@
 				},
 				"source": [
 					"root_path_write = \"write_results\"\r\n",
-					"adls_adapter_write = ADLSAdapter(hostname=adls_endpoint, root=root_path_write, token_provider=DeviceCodeCredential(tenant_id=TENANT_ID))"
+					"adls_adapter_write = ADLSAdapter(hostname=adls_endpoint, root=root_path_write, token_provider=TokenProvider())"
 				],
-				"execution_count": 22
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -256,7 +273,7 @@
 				"source": [
 					"KB.write_to_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter_write})"
 				],
-				"execution_count": 23
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
@@ -275,7 +292,25 @@
 					"KB.clean()\r\n",
 					"KB.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter_write})"
 				],
-				"execution_count": 24
+				"execution_count": 12
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"KB.get_entities()"
+				],
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -293,25 +328,7 @@
 				"source": [
 					"sdf_write = KB.get_data(\"jobsInfo\")"
 				],
-				"execution_count": 25
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"sdf_write.standardize()"
-				],
-				"execution_count": 26
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
@@ -329,7 +346,7 @@
 				"source": [
 					"sdf_write.sample(frac = .5)"
 				],
-				"execution_count": 27
+				"execution_count": 15
 			}
 		]
 	}
