@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "19063ae3-e071-46f8-81b1-1d4f98ca33ab"
+				"spark.autotune.trackingId": "67a735de-0628-438d-a6b8-4674978ef131"
 			}
 		},
 		"metadata": {
@@ -93,17 +93,55 @@
 					"fname = f'{lizzyusers}/data/job_level_data_sample.csv'\n",
 					"rel_fname = '../data/job_level_data_sample.csv'\n",
 					"df = spark.read.format('csv').load(fname).toPandas()\n",
-					"entity = stub_from_frame(entity_name=entity_name, df=df, filename=rel_fname)\n",
-					"entity"
+					"df"
 				],
 				"execution_count": 13
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"df.columns = df.iloc[0]\r\n",
+					"df = df.iloc[1:, :]\r\n",
+					"df"
+				],
+				"execution_count": 14
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"entity = stub_from_frame(entity_name=entity_name, df=df, filename=rel_fname)\r\n",
+					"entity"
+				],
+				"execution_count": 15
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"kb.get_entities()"
 				],
-				"execution_count": 14
+				"execution_count": 16
 			},
 			{
 				"cell_type": "code",
@@ -111,7 +149,7 @@
 					"sdf = kb.get_data(\"jobsInfo\")\n",
 					"sdf.head()"
 				],
-				"execution_count": 15
+				"execution_count": 17
 			},
 			{
 				"cell_type": "code",
@@ -134,7 +172,7 @@
 					"\n",
 					"cdm_corpus = objectmodel.CdmCorpusDefinition()"
 				],
-				"execution_count": 16
+				"execution_count": 18
 			},
 			{
 				"cell_type": "code",
@@ -146,49 +184,49 @@
 					"\n",
 					"adls_adapter = ADLSAdapter(hostname=adls_endpoint, root=root_path_write, token_provider=TokenProvider())"
 				],
-				"execution_count": 17
+				"execution_count": 19
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"kb.write_to_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter})"
 				],
-				"execution_count": 18
+				"execution_count": 20
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"kb.clean()"
 				],
-				"execution_count": null
+				"execution_count": 21
 			},
 			{
 				"cell_type": "code",
 				"source": [
-					"kb.load_from_manifest(\"adls:/StudentMedical.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter})"
+					"kb.load_from_manifest(\"adls:/jobsModel.manifest.cdm.json\", adapters={ADLS_MOUNT: adls_adapter})"
 				],
-				"execution_count": null
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"kb.get_entities()"
 				],
-				"execution_count": null
+				"execution_count": 24
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"sdf = kb.get_data(\"jobsInfo\")"
 				],
-				"execution_count": null
+				"execution_count": 25
 			},
 			{
 				"cell_type": "code",
 				"source": [
-					""
+					"sdf"
 				],
-				"execution_count": null
+				"execution_count": 26
 			},
 			{
 				"cell_type": "code",
